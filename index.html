@@ -14,98 +14,644 @@
             --accent-light: #EDF4FB;
             --text: #3A3A3A;
             --sub: #8A8A8A;
-            --shadow: 0 2px 12px rgba(0,0,0,0.04);
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             --radius: 14px;
-            --nav-bg: rgba(255,255,255,0.45);
-            --border: rgba(255,255,255,0.5);
+            --nav-bg: rgba(255, 255, 255, 0.45);
+            --border: rgba(255, 255, 255, 0.5);
             --nav-blur: 18px;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; transition:background .4s,color .4s; }
-        body.night { --bg:#1E1E1E; --card:#2A2A2A; --text:#E0E0E0; --sub:#A0A0A0; --nav-bg:rgba(30,30,30,0.55); --border:rgba(255,255,255,0.06); --accent-light:#3A4A5A; --shadow:0 2px 12px rgba(0,0,0,0.3); }
-        .app-bg { position:fixed; top:0; left:0; right:0; bottom:0; z-index:-2; background-color:var(--bg); background-size:cover; background-position:center; background-repeat:no-repeat; transition:background-color .4s; }
-        .sidebar { width:18%; min-width:170px; max-width:210px; background:var(--nav-bg); backdrop-filter:blur(var(--nav-blur)); -webkit-backdrop-filter:blur(var(--nav-blur)); display:flex; flex-direction:column; align-items:center; padding-top:20px; border-right:1px solid var(--border); flex-shrink:0; gap:2px; overflow-y:auto; position:relative; z-index:2; transition:background .3s; }
-        .avatar-wrap { width:52px; height:52px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:6px; cursor:pointer; overflow:hidden; position:relative; background-size:cover; background-position:center; box-shadow:0 4px 16px rgba(0,0,0,0.1); transition:.3s; border:3px solid rgba(255,255,255,0.6); z-index:10; }
-        .avatar-wrap:hover { transform:scale(1.06); }
-        .avatar-wrap img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; border-radius:50%; }
-        .nick { font-size:13px; color:var(--text); margin-bottom:14px; font-weight:600; cursor:pointer; padding:3px 10px; border-radius:10px; transition:.2s; z-index:10; position:relative; }
-        .nick:hover { background:rgba(128,128,128,0.1); }
-        .nav-item { width:calc(100% - 20px); display:flex; flex-direction:column; align-items:center; padding:13px 0; margin:2px 10px; border-radius:14px; cursor:pointer; transition:.25s; gap:4px; font-size:13px; }
-        .nav-item:hover { background:rgba(255,255,255,0.5); }
-        .nav-item.active { background:rgba(255,255,255,0.75); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:var(--shadow); }
-        .nav-item .icon { font-size:22px; position:relative; z-index:1; }
-        .nav-item .label { color:var(--sub); font-size:11px; font-weight:500; position:relative; z-index:1; }
-        .nav-item.active .label { color:var(--accent); font-weight:700; }
-        .achievement-section { width:100%; padding:10px 14px; margin-top:6px; display:flex; flex-direction:column; align-items:center; gap:5px; }
-        .achievement-title { font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:2px; font-weight:600; }
-        .achievement-badges { display:flex; flex-wrap:wrap; justify-content:center; gap:5px; }
-        .badge-icon { width:28px; height:28px; border-radius:50%; background:#eee; display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; transition:.25s; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-        .badge-icon.earned { background:var(--accent); color:#fff; box-shadow:0 3px 12px rgba(0,0,0,0.15); }
-        .badge-icon:hover { transform:scale(1.25); }
-        .main { flex:1; padding:18px 26px; overflow-y:auto; position:relative; z-index:1; height:100vh; -webkit-overflow-scrolling:touch; }
-        .greeting { font-size:22px; color:var(--accent); margin-bottom:4px; font-weight:700; letter-spacing:0.5px; }
-        .greeting-sub { font-size:12px; color:var(--sub); margin-bottom:14px; }
-        .domains { display:flex; justify-content:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-        .dom { display:flex; align-items:center; gap:6px; padding:9px 18px; border-radius:30px; background:var(--card); box-shadow:var(--shadow); cursor:pointer; font-size:14px; transition:.25s; border:2px solid transparent; }
-        .dom.active { background:var(--accent); color:#fff; border-color:var(--accent); box-shadow:0 4px 20px rgba(0,0,0,0.12); }
-        .dom.active span { color:#fff; font-weight:700; }
-        .module { display:none; }
-        .module.active { display:block; }
-        .card { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:10px; box-shadow:var(--shadow); transition:.25s; }
-        .card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.06); }
-        .btn { background:var(--accent-light); color:var(--accent); border:none; border-radius:30px; padding:8px 18px; font-size:13px; cursor:pointer; transition:.25s; white-space:nowrap; font-weight:600; display:inline-flex; align-items:center; gap:4px; margin:2px; min-height:36px; min-width:44px; }
-        .btn:hover { opacity:.9; transform:translateY(-2px); }
-        .btn-primary { background:var(--accent); color:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.15); }
-        .btn-primary:hover { box-shadow:0 6px 24px rgba(0,0,0,0.2); }
-        .btn2 { background:#E8F5EC; color:var(--accent2); }
-        .btn3 { background:#FFF4EB; color:var(--accent3); }
-        .btn-sm { padding:4px 12px; font-size:11px; min-height:28px; min-width:36px; font-weight:500; }
-        .fab { position:fixed; right:34px; bottom:56px; width:56px; height:56px; border-radius:50%; background:var(--accent); color:#fff; font-size:30px; border:none; box-shadow:0 6px 24px rgba(0,0,0,0.2); cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; transition:.3s; }
-        .fab:hover { transform:scale(1.08); }
-        .flex { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-        .flex-between { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
-        .checkbox { width:30px; height:30px; border:2px solid var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:.25s; font-size:16px; color:transparent; }
-        .checkbox.done { background:var(--accent); color:#fff; }
-        .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); justify-content:center; align-items:center; z-index:100; }
-        .modal.show { display:flex; }
-        .modal-box { background:var(--card); border-radius:20px; padding:24px; width:90%; max-width:500px; max-height:85vh; overflow-y:auto; box-shadow:0 16px 48px rgba(0,0,0,0.2); }
-        .modal-box h3 { color:var(--accent); margin-bottom:14px; font-size:18px; }
-        input, textarea, select { border:1.5px solid rgba(0,0,0,0.1); border-radius:10px; padding:10px 14px; font-size:14px; width:100%; margin:5px 0; font-family:inherit; background:var(--card); color:var(--text); transition:.25s; }
-        body.night input, body.night textarea, body.night select { border-color:rgba(255,255,255,0.1); }
-        input:focus, textarea:focus, select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-        textarea { min-height:80px; resize:vertical; }
-        .tag { display:inline-block; padding:4px 12px; border-radius:16px; font-size:11px; background:var(--accent-light); margin:2px; cursor:pointer; font-weight:500; transition:.2s; }
-        .tag.active { background:var(--accent); color:#fff; }
-        .badge { display:inline-block; background:var(--accent); color:#fff; border-radius:16px; padding:2px 9px; font-size:10px; margin-left:4px; font-weight:600; }
-        .subject-tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
-        .subject-tab { padding:5px 14px; border-radius:20px; background:var(--accent-light); color:var(--accent); font-size:12px; cursor:pointer; font-weight:500; transition:.2s; border:2px solid transparent; }
-        .subject-tab.active { background:var(--accent); color:#fff; }
-        .heatmap-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:8px; }
-        .heatmap-cell { aspect-ratio:1; border-radius:4px; background:rgba(0,0,0,0.05); min-width:16px; transition:.2s; cursor:pointer; }
-        .heatmap-cell:hover { transform:scale(1.5); z-index:2; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
-        .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:8px 0; }
-        .stat-mini { text-align:center; padding:12px; border-radius:12px; background:var(--card); box-shadow:var(--shadow); }
-        .stat-mini .val { font-size:24px; font-weight:700; color:var(--accent); }
-        .stat-mini .lbl { font-size:11px; color:var(--sub); margin-top:2px; font-weight:500; }
-        .word-table { width:100%; border-collapse:collapse; }
-        .word-table td { padding:10px 12px; vertical-align:middle; }
-        .word-table .en-col { font-size:16px; font-weight:600; text-align:left; width:40%; }
-        .word-table .cn-col { font-size:15px; text-align:left; width:40%; color:var(--sub); }
-        .word-table .action-col { text-align:right; width:20%; }
-        .word-table tr { border-bottom:1px solid rgba(0,0,0,0.06); }
-        body.night .word-table tr { border-bottom-color:rgba(255,255,255,0.06); }
-        .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0; margin-top:8px; }
-        .calendar-cell { aspect-ratio:1; background:var(--card); border-radius:2px; cursor:pointer; position:relative; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05); display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; font-size:12px; font-weight:600; transition:.2s; padding:2px; }
-        .calendar-cell:hover { box-shadow:0 4px 16px rgba(0,0,0,0.15); transform:scale(1.02); z-index:5; }
-        .calendar-cell .day-num { position:absolute; top:2px; left:3px; z-index:2; font-size:11px; font-weight:700; line-height:1; }
-        .calendar-cell .cal-bg-img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0; }
-        .calendar-cell .icons-row { position:absolute; bottom:2px; right:2px; z-index:2; display:flex; gap:1px; font-size:12px; background:transparent; padding:0; border-radius:0; }
-        .pomodoro-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:var(--bg); z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; transition:opacity .4s; opacity:1; }
-        .pomodoro-overlay.hidden { opacity:0; pointer-events:none; }
-        .pomodoro-timer { font-size:96px; font-weight:200; color:var(--accent); letter-spacing:6px; }
-        .countdown-badge { background:var(--card); border-radius:24px; padding:10px 18px; font-size:14px; font-weight:700; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:8px; color:var(--accent); }
-        .slider-row { display:flex; align-items:center; gap:8px; margin:4px 0; }
-        .slider-row input[type=range] { flex:1; accent-color:var(--accent); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background .4s, color .4s;
+        }
+        body.night {
+            --bg: #1E1E1E;
+            --card: #2A2A2A;
+            --text: #E0E0E0;
+            --sub: #A0A0A0;
+            --nav-bg: rgba(30, 30, 30, 0.55);
+            --border: rgba(255, 255, 255, 0.06);
+            --accent-light: #3A4A5A;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+        .app-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -2;
+            background-color: var(--bg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-color .4s;
+        }
+        .sidebar {
+            width: 18%;
+            min-width: 170px;
+            max-width: 210px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(var(--nav-blur));
+            -webkit-backdrop-filter: blur(var(--nav-blur));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
+            gap: 2px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+            transition: background .3s;
+        }
+        .avatar-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: .3s;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            z-index: 10;
+        }
+        .avatar-wrap:hover {
+            transform: scale(1.06);
+        }
+        .avatar-wrap img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .nick {
+            font-size: 13px;
+            color: var(--text);
+            margin-bottom: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 3px 10px;
+            border-radius: 10px;
+            transition: .2s;
+            z-index: 10;
+            position: relative;
+        }
+        .nick:hover {
+            background: rgba(128, 128, 128, 0.1);
+        }
+        .nav-item {
+            width: calc(100% - 20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 13px 0;
+            margin: 2px 10px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .25s;
+            gap: 4px;
+            font-size: 13px;
+        }
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+        .nav-item .icon {
+            font-size: 22px;
+            position: relative;
+            z-index: 1;
+        }
+        .nav-item .label {
+            color: var(--sub);
+            font-size: 11px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        .nav-item.active .label {
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .achievement-section {
+            width: 100%;
+            padding: 10px 14px;
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .achievement-title {
+            font-size: 10px;
+            color: var(--sub);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        .achievement-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+        .badge-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .25s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .badge-icon.earned {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+        }
+        .badge-icon:hover {
+            transform: scale(1.25);
+        }
+        .main {
+            flex: 1;
+            padding: 18px 26px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            -webkit-overflow-scrolling: touch;
+        }
+        .greeting {
+            font-size: 22px;
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .greeting-sub {
+            font-size: 12px;
+            color: var(--sub);
+            margin-bottom: 14px;
+        }
+        .domains {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .dom {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: 30px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 14px;
+            transition: .25s;
+            border: 2px solid transparent;
+        }
+        .dom.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+        .dom.active span {
+            color: #fff;
+            font-weight: 700;
+        }
+        .module {
+            display: none;
+        }
+        .module.active {
+            display: block;
+        }
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+            transition: .25s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+        .btn {
+            background: var(--accent-light);
+            color: var(--accent);
+            border: none;
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .25s;
+            white-space: nowrap;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin: 2px;
+            min-height: 36px;
+            min-width: 44px;
+        }
+        .btn:hover {
+            opacity: .9;
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+        }
+        .btn2 {
+            background: #E8F5EC;
+            color: var(--accent2);
+        }
+        .btn3 {
+            background: #FFF4EB;
+            color: var(--accent3);
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 11px;
+            min-height: 28px;
+            min-width: 36px;
+            font-weight: 500;
+        }
+        .fab {
+            position: fixed;
+            right: 34px;
+            bottom: 56px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 30px;
+            border: none;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: .3s;
+        }
+        .fab:hover {
+            transform: scale(1.08);
+        }
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: .25s;
+            font-size: 16px;
+            color: transparent;
+        }
+        .checkbox.done {
+            background: var(--accent);
+            color: #fff;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-box {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+        }
+        .modal-box h3 {
+            color: var(--accent);
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+        input, textarea, select {
+            border: 1.5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            width: 100%;
+            margin: 5px 0;
+            font-family: inherit;
+            background: var(--card);
+            color: var(--text);
+            transition: .25s;
+        }
+        body.night input, body.night textarea, body.night select {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            background: var(--accent-light);
+            margin: 2px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: .2s;
+        }
+        .tag.active {
+            background: var(--accent);
+            color: #fff;
+        }
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 16px;
+            padding: 2px 9px;
+            font-size: 10px;
+            margin-left: 4px;
+            font-weight: 600;
+        }
+        .subject-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .subject-tab {
+            padding: 5px 14px;
+            border-radius: 20px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: .2s;
+            border: 2px solid transparent;
+        }
+        .subject-tab.active {
+            background: var(--accent);
+            color: #fff;
+        }
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 8px;
+        }
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.05);
+            min-width: 16px;
+            transition: .2s;
+            cursor: pointer;
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.5);
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .stat-mini {
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+        .stat-mini .val {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .stat-mini .lbl {
+            font-size: 11px;
+            color: var(--sub);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+        .word-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .word-table td {
+            padding: 10px 12px;
+            vertical-align: middle;
+        }
+        .word-table .en-col {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+            width: 40%;
+        }
+        .word-table .cn-col {
+            font-size: 15px;
+            text-align: left;
+            width: 40%;
+            color: var(--sub);
+        }
+        .word-table .action-col {
+            text-align: right;
+            width: 20%;
+        }
+        .word-table tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        body.night .word-table tr {
+            border-bottom-color: rgba(255, 255, 255, 0.06);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0;
+            margin-top: 8px;
+        }
+        .calendar-cell {
+            aspect-ratio: 1;
+            background: var(--card);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-end;
+            font-size: 12px;
+            font-weight: 600;
+            transition: .2s;
+            padding: 2px;
+        }
+        .calendar-cell:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02);
+            z-index: 5;
+        }
+        .calendar-cell .day-num {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            z-index: 2;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .calendar-cell .cal-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        .calendar-cell .icons-row {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            z-index: 2;
+            display: flex;
+            gap: 1px;
+            font-size: 12px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+        .pomodoro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg);
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            transition: opacity .4s;
+            opacity: 1;
+        }
+        .pomodoro-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .pomodoro-timer {
+            font-size: 96px;
+            font-weight: 200;
+            color: var(--accent);
+            letter-spacing: 6px;
+        }
+        .countdown-badge {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+        }
+        .slider-row input[type=range] {
+            flex: 1;
+            accent-color: var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -133,30 +679,75 @@
 </div>
 
 <script>
-const STORAGE_KEY = 'fashuo_v22';
+const STORAGE_KEY = 'fashuo_v23';
 const PRESET_SUBJECTS = ['刑法','民法','法制史','宪法','法理学'];
 const CALENDAR_ICONS = ['📖','🎒','✈️','🍕','🏃','🎮','🎨','💼','🛒','❤️','🎵','💤','☕','💻','📝','🎂','🌧️','🌞','🚗','🏠'];
 
-// 成就称号定义
+// 完整的120+称号系统
 const ACHIEVEMENTS = [
+  // 签到类（累计签到天数）
   {id:'checkin_1',icon:'👣',name:'脚印轻得像没来过',cond:()=>D.checkins.length>=1},
+  {id:'checkin_3',icon:'🦎',name:'三天打鱼两天晒网的鱼',cond:()=>D.checkins.length>=3},
+  {id:'checkin_5',icon:'🐿️',name:'囤积了五天知识坚果',cond:()=>D.checkins.length>=5},
   {id:'checkin_7',icon:'🕯️',name:'照亮了一周的书桌',cond:()=>D.checkins.length>=7},
+  {id:'checkin_10',icon:'🐌',name:'十天的痕迹只有自己知道',cond:()=>D.checkins.length>=10},
+  {id:'checkin_14',icon:'🌛',name:'半个月亮爬上来',cond:()=>D.checkins.length>=14},
+  {id:'checkin_21',icon:'🧟',name:'习惯已养成，灵魂已出走',cond:()=>D.checkins.length>=21},
   {id:'checkin_30',icon:'🦅',name:'一个月没见过窗外',cond:()=>D.checkins.length>=30},
+  {id:'checkin_50',icon:'🐫',name:'沙漠里走了五十天',cond:()=>D.checkins.length>=50},
+  {id:'checkin_75',icon:'🦣',name:'猛犸象级别的坚持',cond:()=>D.checkins.length>=75},
   {id:'checkin_100',icon:'👽',name:'地球人已经无法阻止你',cond:()=>D.checkins.length>=100},
+  {id:'checkin_150',icon:'🐉',name:'传说级签到生物',cond:()=>D.checkins.length>=150},
+  {id:'checkin_200',icon:'🪐',name:'在知识的轨道上运行',cond:()=>D.checkins.length>=200},
+  {id:'checkin_365',icon:'🎇',name:'一个太阳年的坚持',cond:()=>D.checkins.length>=365},
+  // 错题本类
   {id:'error_10',icon:'📝',name:'错题收集家',cond:()=>totalErrors()>=10},
   {id:'error_50',icon:'🗃️',name:'错题档案馆馆长',cond:()=>totalErrors()>=50},
-  {id:'acc_75',icon:'🎯',name:'错题克星',cond:()=>getAvgErrorAccuracy()>=75},
+  {id:'error_100',icon:'🏗️',name:'在错误上建了座城市',cond:()=>totalErrors()>=100},
+  {id:'acc_60',icon:'🎯',name:'六边形战士（入门款）',cond:()=>getAvgErrorAccuracy()>=60},
+  {id:'acc_75',icon:'🔥',name:'错题克星',cond:()=>getAvgErrorAccuracy()>=75},
+  {id:'acc_85',icon:'🧙',name:'参考答案本参',cond:()=>getAvgErrorAccuracy()>=85},
   {id:'acc_95',icon:'🤖',name:'出题人看了都沉默',cond:()=>getAvgErrorAccuracy()>=95},
+  // 背诵类
   {id:'recite_5',icon:'🌱',name:'刚发芽的记忆',cond:()=>totalRecites()>=5},
+  {id:'recite_15',icon:'🌿',name:'记忆藤蔓在蔓延',cond:()=>totalRecites()>=15},
+  {id:'recite_30',icon:'📚',name:'行走的小抄',cond:()=>totalRecites()>=30},
   {id:'recite_50',icon:'🧠',name:'大脑开始冒烟',cond:()=>totalRecites()>=50},
+  {id:'recite_80',icon:'🏛️',name:'人形法典',cond:()=>totalRecites()>=80},
+  {id:'recite_120',icon:'🌋',name:'知识火山喷发',cond:()=>totalRecites()>=120},
   {id:'recite_200',icon:'🐙',name:'每条触手都在背法条',cond:()=>totalRecites()>=200},
+  // 番茄钟/学习时长类
   {id:'pomo_5h',icon:'🍅',name:'番茄幼苗',cond:()=>pomoTotalHours()>=5},
+  {id:'pomo_15h',icon:'🍅🍅',name:'番茄藤蔓',cond:()=>pomoTotalHours()>=15},
+  {id:'pomo_30h',icon:'🍅🍅🍅',name:'番茄农场主',cond:()=>pomoTotalHours()>=30},
+  {id:'pomo_60h',icon:'⏰',name:'生物钟已混乱',cond:()=>pomoTotalHours()>=60},
   {id:'pomo_100h',icon:'🕯️',name:'凿壁偷光践行者',cond:()=>pomoTotalHours()>=100},
+  {id:'pomo_200h',icon:'🏕️',name:'在书桌前扎营了',cond:()=>pomoTotalHours()>=200},
+  {id:'pomo_500h',icon:'🧘',name:'书桌是第二个家',cond:()=>pomoTotalHours()>=500},
+  // 英语单词类
   {id:'word_30',icon:'🔤',name:'字母表入门',cond:()=>D.words.length>=30},
+  {id:'word_100',icon:'📖',name:'词典雏形',cond:()=>D.words.length>=100},
+  {id:'word_300',icon:'📚',name:'行走的词汇表',cond:()=>D.words.length>=300},
   {id:'word_500',icon:'🌐',name:'英语已渗透血液',cond:()=>D.words.length>=500},
+  {id:'word_1000',icon:'🗽',name:'可以直接润了',cond:()=>D.words.length>=1000},
+  // 日历高频词类
+  {id:'cal_study_8',icon:'📖',name:'书本已长在手上',cond:()=>calWordCount('学习')>=8},
+  {id:'cal_sport_5',icon:'🏃',name:'间歇性自律',cond:()=>calWordCount('运动')>=5},
+  {id:'cal_travel_3',icon:'✈️',name:'心已经飞了',cond:()=>calWordCount('旅游')>=3},
+  {id:'cal_food_8',icon:'🍔',name:'学习消耗型吃货',cond:()=>calWordCount('美食')+calWordCount('吃饭')>=8},
+  {id:'cal_night_5',icon:'🌙',name:'黑夜是我的充电器',cond:()=>calWordCount('熬夜')>=5},
+  {id:'cal_emo_3',icon:'💔',name:'法硕PTSD已确诊',cond:()=>calWordCount('emo')+calWordCount('崩溃')+calWordCount('想哭')>=3},
+  {id:'cal_coffee_10',icon:'☕',name:'血管里流的是咖啡因',cond:()=>calWordCount('咖啡')+calWordCount('奶茶')>=10},
+  {id:'cal_giveup_5',icon:'🤡',name:'每天都在自我劝退',cond:()=>calWordCount('放弃')+calWordCount('不想学')>=5},
+  {id:'cal_library_8',icon:'🏛️',name:'图书管理员编外人员',cond:()=>calWordCount('图书馆')>=8},
+  {id:'cal_birthday_3',icon:'🎂',name:'社交余额严重不足',cond:()=>calWordCount('生日')+calWordCount('聚会')>=3},
+  {id:'cal_tired_10',icon:'🛌',name:'随时随地可休眠',cond:()=>calWordCount('困')+calWordCount('累')+calWordCount('睡')>=10},
+  {id:'cal_cheer_8',icon:'⛽',name:'自我打气加油站',cond:()=>calWordCount('冲')+calWordCount('加油')+calWordCount('坚持')>=8},
+  // 隐藏成就
   {id:'night_owl',icon:'🦉',name:'深夜出没的学者',cond:()=>D.pomodoroHistory.some(h=>new Date(h.date).getHours()<5)},
   {id:'nickname_3',icon:'🎭',name:'身份还在探索中',cond:()=>(D._nickChanges||0)>=3},
   {id:'export_5',icon:'🗄️',name:'缺乏安全感的仓鼠',cond:()=>(D._exportCount||0)>=5},
+  {id:'theme_5',icon:'🎨',name:'调色盘转世',cond:()=>(D._themeChanges||0)>=5},
 ];
 
 let D = {
@@ -179,6 +770,7 @@ function getAvgErrorAccuracy(){
   return a.reduce((s,e)=>s+predictAcc(e),0)/a.length;
 }
 function predictAcc(e){ if(!e.history||!e.history.length) return 50; const c=e.history.filter(h=>h.correct).length; return Math.round(c/e.history.length*100); }
+function calWordCount(word){ let cnt=0; Object.values(D.calendar).forEach(d=>{ if(d.note&&d.note.includes(word))cnt++; if(d.icons&&d.icons.includes(word))cnt++; }); return cnt; }
 function checkAchievements(){
   let u=false;
   ACHIEVEMENTS.forEach(a=>{ if(!D.achievements.includes(a.id)&&a.cond()){ D.achievements.push(a.id); u=true; toast(`🏅 解锁：${a.name}`); } });
@@ -249,12 +841,16 @@ function getSubjectOptions(currentVal,domain){
   return existing.map(s=>`<option value="${esc(s)}" ${currentVal===s?'selected':''}>${esc(s)}</option>`).join('')+`<option value="__custom__">✏️ 其他</option>`;
 }
 
-// ========== 每日计划 ==========
+// 每日计划
 function getDayTasks(ds){ if(!D.tasks[ds])D.tasks[ds]=[]; return D.tasks[ds]; }
 function renderDaily(){
   const ds=todayStr(); const tasks=getDayTasks(ds); const m=document.getElementById('dailyModule');
   if(!D.checkins.includes(ds)){ D.checkins.push(ds); save(); }
-  m.innerHTML=`<div class="flex-between"><div class="flex"><button class="btn btn-sm" onclick="shiftDate(-1)">◀</button><strong style="font-size:18px">${fmtDate(ds)}</strong><button class="btn btn-sm" onclick="shiftDate(1)">▶</button><button class="btn btn-sm" onclick="D.dateOffset=0;renderAll()">今天</button><span class="countdown-badge">📅 已签到 ${D.checkins.length} 天</span></div><div class="flex"><button class="btn btn-sm btn-primary" onclick="openPomodoro()">🍅 专注</button><select id="statRange" onchange="updateStats()" style="width:auto;margin:0;font-size:11px;padding:5px 8px"><option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select><button class="btn btn-sm" onclick="toggleStats()">📊 统计</button></div></div><div id="taskListView">${renderTaskList(tasks,ds)}</div><div id="statsView" style="display:none"><div class="card">📈 热力图<div class="heatmap-grid" id="heatmap"></div></div><div class="stats-row" id="statsNumbers"></div><div class="card">📋 复盘<div id="reportContent"></div><button class="btn btn-sm" onclick="addExamRecord()">+ 模考</button></div></div><button class="fab" onclick="openTaskForm()">+</button>`;
+  m.innerHTML=`
+    <div class="flex-between"><div class="flex"><button class="btn btn-sm" onclick="shiftDate(-1)">◀</button><strong style="font-size:18px">${fmtDate(ds)}</strong><button class="btn btn-sm" onclick="shiftDate(1)">▶</button><button class="btn btn-sm" onclick="D.dateOffset=0;renderAll()">今天</button><span class="countdown-badge">📅 已签到 ${D.checkins.length} 天</span></div>
+      <div class="flex"><button class="btn btn-sm btn-primary" onclick="openPomodoro()">🍅 专注</button><select id="statRange" onchange="updateStats()" style="width:auto;margin:0;font-size:11px;padding:5px 8px"><option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select><button class="btn btn-sm" onclick="toggleStats()">📊 统计</button></div></div>
+    <div id="taskListView">${renderTaskList(tasks,ds)}</div><div id="statsView" style="display:none"><div class="card">📈 热力图<div class="heatmap-grid" id="heatmap"></div></div><div class="stats-row" id="statsNumbers"></div><div class="card">📋 复盘<div id="reportContent"></div><button class="btn btn-sm" onclick="addExamRecord()">+ 模考</button></div></div>
+    <button class="fab" onclick="openTaskForm()">+</button>`;
   if(document.getElementById('statsView').style.display!=='none')updateStats();
 }
 function renderTaskList(tasks,ds){
@@ -291,7 +887,7 @@ function updateStats(){
 }
 function addExamRecord(){ const s=prompt('科目：'); if(!s)return; const sc=parseFloat(prompt('分数：')); if(isNaN(sc))return; D.exams.push({date:todayStr(),subject:s,score:sc}); save(); updateStats(); toast('成绩已记录'); }
 
-// ========== 番茄钟（≥1分钟计入汇总） ==========
+// 番茄钟（≥1分钟计入汇总）
 let pomodoroInterval=null, pomodoroSeconds=25*60, pomodoroRunning=false, pomodoroElapsed=0, ambientAudio=null;
 function openPomodoro(){ document.getElementById('pomodoroOverlay').classList.remove('hidden'); pomodoroSeconds=25*60; pomodoroElapsed=0; updateTimerDisplay(); }
 function closePomodoro(){
@@ -336,7 +932,7 @@ function playAmbientSound(){
 }
 function stopAmbient(){ if(ambientAudio){ try{ambientAudio.source.stop();}catch(e){} try{ambientAudio.ctx.close();}catch(e){} ambientAudio=null; } }
 
-// ========== 错题本（五科细分） ==========
+// 错题本（五科细分）
 let errorSubjectFilter='all';
 function renderError(){
   const m=document.getElementById('errorModule'); const list=D.errors[D.domain]||[]; const allSubjects=[...new Set(list.map(e=>e.subject))];
@@ -359,7 +955,7 @@ function deleteError(i){ D.errors[D.domain].splice(i,1); save(); renderError(); 
 function reviewError(i){ const e=D.errors[D.domain][i]; openModal(`<div class="modal-box"><h3>回顾错题</h3><p><strong>${esc(e.subject)}·${esc(e.chapter)}</strong></p><p>${esc(e.question)}</p><textarea id="reviewSubj" placeholder="你的答案"></textarea><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitReview(${i})">提交</button></div><div id="reviewResult" style="margin-top:8px;display:none"></div></div>`); }
 function submitReview(i){ const e=D.errors[D.domain][i]; let u=document.getElementById('reviewSubj')?.value||''; const ok=u.trim()===e.answer.trim(); e.history.push({date:new Date().toISOString(),correct:ok}); const rr=document.getElementById('reviewResult'); rr.style.display='block'; rr.innerHTML=ok?'<span style="color:var(--accent2)">✅正确</span>':'<span style="color:#D05555">❌答案：'+esc(e.answer)+'</span>'; save(); }
 
-// ========== 知识点库（五科细分） ==========
+// 知识点库（五科细分）
 let knowledgeSubjectFilter='all';
 function renderKnowledge(){
   const m=document.getElementById('knowledgeModule'); const list=D.knowledge[D.domain]||[]; const allSubjects=[...new Set(list.map(k=>k.subject))];
@@ -380,7 +976,7 @@ function editKnowledge(i){ openKnowledgeForm(i); }
 function deleteKnowledge(i){ D.knowledge[D.domain].splice(i,1); save(); renderKnowledge(); }
 function addKnowledgeToRecite(i){ const k=D.knowledge[D.domain][i]; if(!k)return; D.recites[D.domain].push({id:Date.now().toString(),subject:k.subject,chapter:k.chapter,content:k.content,stage:0,nextReview:todayStr()}); save(); toast('已加入背诵'); }
 
-// ========== 背诵（五科细分） ==========
+// 背诵（五科细分）
 let reciteSubjectFilter='all';
 function renderRecite(){
   const m=document.getElementById('reciteModule'); const all=D.recites[D.domain]||[]; const allSubjects=[...new Set(all.map(k=>k.subject))];
@@ -405,7 +1001,7 @@ function renderSubjectTabs(containerId,subjects,currentFilter,callback){
   container.innerHTML=tabs.map(s=>{ const label=s==='all'?'全部':s,active=currentFilter===s; return`<span class="subject-tab${active?' active':''}" onclick="event.stopPropagation();(${callback.toString()})('${s.replace(/'/g,"\\'")}')">${label}</span>`; }).join('');
 }
 
-// ========== 英语 ==========
+// 英语
 let wordView='all';
 function renderEnglish(){
   D.domain='english'; const m=document.getElementById('englishModule');
@@ -421,7 +1017,7 @@ function toggleWordView(v){ wordView=v; renderEnglish(); }
 function startWordQuiz(){ if(D.words.length<4)return toast('至少4个'); const p=[...D.words].sort(()=>Math.random()-0.5),c=p[0],o=[c,...p.slice(1,4)].sort(()=>Math.random()-0.5); openModal(`<div class="modal-box"><h3>选择正确释义</h3><h2>${esc(c.en)}</h2>${o.map(x=>`<button class="btn" style="display:block;width:100%;margin:4px 0" onclick="checkQuiz('${esc(x.cn)}','${esc(c.cn)}','${esc(c.en)}')">${esc(x.cn)}</button>`).join('')}<div style="text-align:right"><button class="btn" onclick="closeModal()">关闭</button></div></div>`); }
 function checkQuiz(ch,co,en){ const ok=ch===co; toast(ok?'✅正确':'❌答案：'+co); const w=D.words.find(x=>x.en===en); if(w){ const iv=[1,2,4,7,15,30,60,120]; if(ok)w.stage=Math.min((w.stage||0)+1,iv.length-1); else w.stage=0; w.nextReview=new Date(Date.now()+iv[w.stage]*86400000).toISOString().split('T')[0]; save(); } closeModal(); }
 
-// ========== 日历（大格子+ins详情弹窗） ==========
+// 日历（大格子+ins详情弹窗）
 let calYear,calMonth,selectedCalIcons=[];
 function renderCalendar(){ const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth()+1; document.getElementById('calendarModule').innerHTML=''; renderCalendarMonth(); }
 function renderCalendarMonth(){
@@ -451,7 +1047,7 @@ function saveCalDay(ds){ if(!D.calendar[ds])D.calendar[ds]={images:[],icons:[],n
 function deleteCalImg(ds,i){ D.calendar[ds].images.splice(i,1); save(); closeModal(); renderCalendarMonth(); }
 function previewImage(src){ openModal(`<div class="modal-box" style="text-align:center"><img src="${src}" style="max-width:100%;max-height:70vh;border-radius:10px"><br><button class="btn" onclick="closeModal()">关闭</button></div>`); }
 
-// ========== 设置 ==========
+// 设置
 function renderSettings(){
   const m=document.getElementById('settingsModule'),presets=['#5B9BD5','#6BBF8A','#F0A060','#9B7EC4','#D05555','#5BA0A0','#E08090','#C8956C','#8A8A8A','#4A90D9'];
   m.innerHTML=`<div class="card"><h3>🎨主题取色</h3><div class="flex" style="flex-wrap:wrap;gap:6px">${presets.map(c=>`<span style="width:32px;height:32px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${D.settings.accentColor===c?'var(--text)':'transparent'}" onclick="pickColor('${c}')"></span>`).join('')}<input type="color" value="${D.settings.accentColor}" onchange="pickColor(this.value)" style="width:40px;height:32px"></div><div class="slider-row"><span>导航透明度</span><input type="range" min="0" max="100" value="${Math.round(D.settings.navOpacity*100)}" onchange="D.settings.navOpacity=this.value/100;applyNavStyle();save()"></div><div class="slider-row"><span>毛玻璃强度</span><input type="range" min="0" max="40" value="${D.settings.navBlur}" onchange="D.settings.navBlur=parseInt(this.value);applyNavStyle();save()"></div><button class="btn btn-sm" onclick="toggleNight()">${D.settings.nightMode?'☀️白天':'🌙夜晚'}模式</button></div><div class="card"><h3>🖼背景图</h3><input type="file" accept="image/*" onchange="uploadBg(this)"><input type="text" id="bgUrl" placeholder="图片URL" value="${D.settings.bgImage||''}"><button class="btn btn-sm" onclick="applyBgUrl()">应用</button><button class="btn btn-sm" onclick="removeBg()">清除</button></div><div class="card"><h3>📦数据</h3><button class="btn btn-sm" onclick="exportAll()">导出JSON</button><button class="btn btn-sm" onclick="importAll()">导入</button></div><div class="card"><h3>📅考研日期</h3><input type="date" id="examDateInput" value="${D.settings.examDate||''}" onchange="D.settings.examDate=this.value;save();renderAll()"></div>`;
@@ -464,7 +1060,7 @@ function removeBg(){ D.settings.bgImage=''; updateAppBg(); save(); }
 function exportAll(){ const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='法硕督学备份.json'; a.click(); D._exportCount=(D._exportCount||0)+1; save(); toast('导出成功'); }
 function importAll(){ const i=document.createElement('input'); i.type='file'; i.accept='.json'; i.onchange=function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ try{ const d=JSON.parse(ev.target.result); D={...D,...d}; save(); renderAll(); toast('导入成功'); }catch(ex){ toast('格式错误'); } }; r.readAsText(f); }; i.click(); }
 
-// ========== 启动 ==========
+// 启动
 function init(){
   document.documentElement.style.setProperty('--accent',D.settings.accentColor||'#5B9BD5');
   if(D.settings.nightMode)document.body.classList.add('night');

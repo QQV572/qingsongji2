@@ -1,123 +1,121 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>法硕督学 · 全能备考舱</title>
-  <style>
-    :root {
-      --bg: #F8F9FC; --card: #FFFFFF; --accent: #5B9BD5; --accent2: #6BBF8A; --accent3: #F0A060;
-      --accent-light: #EDF4FB; --text: #3A3A3A; --sub: #8A8A8A; --shadow: 0 2px 12px rgba(0,0,0,0.04);
-      --radius: 14px; --nav-bg: rgba(255,255,255,0.45); --border: rgba(255,255,255,0.5); --nav-blur: 18px;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      background: var(--bg); color: var(--text); display: flex; height: 100vh;
-      overflow: hidden; transition: background .4s, color .4s;
-    }
-    body.night {
-      --bg: #1E1E1E; --card: #2A2A2A; --text: #E0E0E0; --sub: #A0A0A0;
-      --nav-bg: rgba(30,30,30,0.55); --border: rgba(255,255,255,0.06);
-      --accent-light: #3A4A5A; --shadow: 0 2px 12px rgba(0,0,0,0.3);
-    }
-    .app-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg); background-size: cover; background-position: center; background-repeat: no-repeat; transition: background-color .4s; }
-    .sidebar { width: 18%; min-width: 170px; max-width: 210px; background: var(--nav-bg); backdrop-filter: blur(var(--nav-blur)); -webkit-backdrop-filter: blur(var(--nav-blur)); display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-right: 1px solid var(--border); flex-shrink: 0; gap: 2px; overflow-y: auto; position: relative; z-index: 2; transition: background .3s; }
-    .avatar-wrap { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 6px; cursor: pointer; overflow: hidden; position: relative; background-size: cover; background-position: center; box-shadow: 0 4px 16px rgba(0,0,0,0.1); transition: .3s; border: 3px solid rgba(255,255,255,0.6); z-index: 10; }
-    .avatar-wrap:hover { transform: scale(1.06); }
-    .avatar-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .nick { font-size: 13px; color: var(--text); margin-bottom: 14px; font-weight: 600; cursor: pointer; padding: 3px 10px; border-radius: 10px; transition: .2s; z-index: 10; position: relative; }
-    .nick:hover { background: rgba(128,128,128,0.1); }
-    .nav-item { width: calc(100% - 20px); display: flex; flex-direction: column; align-items: center; padding: 13px 0; margin: 2px 10px; border-radius: 14px; cursor: pointer; transition: .25s; gap: 4px; font-size: 13px; }
-    .nav-item:hover { background: rgba(255,255,255,0.5); }
-    .nav-item.active { background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow); }
-    .nav-item .icon { font-size: 22px; position: relative; z-index: 1; }
-    .nav-item .label { color: var(--sub); font-size: 11px; font-weight: 500; position: relative; z-index: 1; }
-    .nav-item.active .label { color: var(--accent); font-weight: 700; }
-    .achievement-section { width: 100%; padding: 10px 14px; margin-top: 6px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .achievement-title { font-size: 10px; color: var(--sub); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; cursor: pointer; }
-    .achievement-title:hover { color: var(--accent); }
-    .achievement-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
-    .badge-icon { width: 28px; height: 28px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; transition: .25s; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .badge-icon.earned { background: var(--accent); color: #fff; box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
-    .badge-icon:hover { transform: scale(1.25); }
-    .main { flex: 1; padding: 18px 26px; overflow-y: auto; position: relative; z-index: 1; height: 100vh; -webkit-overflow-scrolling: touch; }
-    .greeting { font-size: 22px; color: var(--accent); margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px; }
-    .greeting-sub { font-size: 12px; color: var(--sub); margin-bottom: 14px; }
-    .domains { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .dom { display: flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 30px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; font-size: 14px; transition: .25s; border: 2px solid transparent; }
-    .dom.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-    .dom.active span { color: #fff; font-weight: 700; }
-    .module { display: none; }
-    .module.active { display: block; }
-    .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); transition: .25s; }
-    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-    .btn { background: var(--accent-light); color: var(--accent); border: none; border-radius: 30px; padding: 8px 18px; font-size: 13px; cursor: pointer; transition: .25s; white-space: nowrap; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin: 2px; min-height: 36px; min-width: 44px; }
-    .btn:hover { opacity: .9; transform: translateY(-2px); }
-    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-    .btn-primary:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
-    .btn2 { background: #E8F5EC; color: var(--accent2); }
-    .btn3 { background: #FFF4EB; color: var(--accent3); }
-    .btn-sm { padding: 4px 12px; font-size: 11px; min-height: 28px; min-width: 36px; font-weight: 500; }
-    .fab { position: fixed; right: 34px; bottom: 56px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 30px; border: none; box-shadow: 0 6px 24px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: .3s; }
-    .fab:hover { transform: scale(1.08); }
-    .flex { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-    .checkbox { width: 30px; height: 30px; border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: .25s; font-size: 16px; color: transparent; }
-    .checkbox.done { background: var(--accent); color: #fff; }
-    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 100; }
-    .modal.show { display: flex; }
-    .modal-box { background: var(--card); border-radius: 20px; padding: 24px; width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 16px 48px rgba(0,0,0,0.2); }
-    .modal-box h3 { color: var(--accent); margin-bottom: 14px; font-size: 18px; }
-    input, textarea, select { border: 1.5px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 10px 14px; font-size: 14px; width: 100%; margin: 5px 0; font-family: inherit; background: var(--card); color: var(--text); transition: .25s; }
-    body.night input, body.night textarea, body.night select { border-color: rgba(255,255,255,0.1); }
-    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
-    textarea { min-height: 80px; resize: vertical; }
-    .tag { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 11px; background: var(--accent-light); margin: 2px; cursor: pointer; font-weight: 500; transition: .2s; }
-    .tag.active { background: var(--accent); color: #fff; }
-    .badge { display: inline-block; background: var(--accent); color: #fff; border-radius: 16px; padding: 2px 9px; font-size: 10px; margin-left: 4px; font-weight: 600; }
-    .subject-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-    .subject-tab { padding: 5px 14px; border-radius: 20px; background: var(--accent-light); color: var(--accent); font-size: 12px; cursor: pointer; font-weight: 500; transition: .2s; border: 2px solid transparent; }
-    .subject-tab.active { background: var(--accent); color: #fff; }
-    .heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 6px; }
-    .heatmap-cell { aspect-ratio: 1; border-radius: 4px; background: rgba(0,0,0,0.05); min-width: 16px; transition: .2s; cursor: pointer; }
-    .heatmap-cell:hover { transform: scale(1.5); z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0; }
-    .stat-mini { text-align: center; padding: 12px; border-radius: 12px; background: var(--card); box-shadow: var(--shadow); }
-    .stat-mini .val { font-size: 24px; font-weight: 700; color: var(--accent); }
-    .stat-mini .lbl { font-size: 11px; color: var(--sub); margin-top: 2px; font-weight: 500; }
-    .word-table { width: 100%; border-collapse: collapse; }
-    .word-table td { padding: 10px 12px; vertical-align: middle; }
-    .word-table .en-col { font-size: 16px; font-weight: 600; text-align: left; width: 40%; }
-    .word-table .cn-col { font-size: 15px; text-align: left; width: 40%; color: var(--sub); }
-    .word-table .action-col { text-align: right; width: 20%; }
-    .word-table tr { border-bottom: 1px solid rgba(0,0,0,0.06); }
-    body.night .word-table tr { border-bottom-color: rgba(255,255,255,0.06); }
-    /* 日历格子无缝隙 */
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; margin-top: 8px; }
-    .calendar-cell { aspect-ratio: 1; background: var(--card); cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 0 0 1px var(--border); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 12px; font-weight: 600; transition: .2s; }
-    .calendar-cell:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 2; }
-    .calendar-cell .day-num { position: absolute; top: 6px; left: 8px; z-index: 2; font-size: 13px; font-weight: 700; }
-    .calendar-cell .icons-row { position: absolute; bottom: 4px; right: 4px; z-index: 2; display: flex; gap: 2px; font-size: 13px; background: rgba(255,255,255,0.7); border-radius: 10px; padding: 2px 6px; }
-    .pomodoro-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity .4s; opacity: 1; }
-    .pomodoro-overlay.hidden { opacity: 0; pointer-events: none; }
-    .pomodoro-timer { font-size: 96px; font-weight: 200; color: var(--accent); letter-spacing: 6px; }
-    .countdown-badge { background: var(--card); border-radius: 24px; padding: 10px 18px; font-size: 14px; font-weight: 700; box-shadow: var(--shadow); display: inline-flex; align-items: center; gap: 8px; color: var(--accent); }
-    .slider-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-    .slider-row input[type=range] { flex: 1; accent-color: var(--accent); }
-    /* 成就面板 */
-    .achievement-panel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px 0; }
-    .ach-item { text-align: center; padding: 8px; border-radius: 12px; background: var(--card); box-shadow: var(--shadow); opacity: 0.5; }
-    .ach-item.earned { opacity: 1; }
-    .ach-item .ach-icon { font-size: 24px; }
-    .ach-item .ach-name { font-size: 10px; color: var(--text); margin-top: 4px; }
-    /* 日历放大卡片 */
-    .day-card { background: var(--card); border-radius: 20px; overflow: hidden; width: 320px; max-width: 90vw; box-shadow: 0 16px 48px rgba(0,0,0,0.2); }
-    .day-card .day-img { width: 100%; height: 250px; background-size: cover; background-position: center; position: relative; }
-    .day-card .day-info { padding: 16px; }
-    .day-card .day-icons { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-    .day-card .day-note { font-size: 14px; color: var(--text); margin-bottom: 12px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>法硕督学 · 全能备考舱</title>
+<style>
+:root{
+  --bg:#F8F9FC;--card:#FFFFFF;--accent:#5B9BD5;--accent2:#6BBF8A;--accent3:#F0A060;
+  --accent-light:#EDF4FB;--text:#3A3A3A;--sub:#8A8A8A;--shadow:0 2px 12px rgba(0,0,0,0.04);
+  --radius:14px;--nav-bg:rgba(255,255,255,0.45);--border:rgba(255,255,255,0.5);
+  --nav-blur:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--text);display:flex;height:100vh;
+  overflow:hidden;transition:background .4s,color .4s;
+}
+body.night{
+  --bg:#1E1E1E;--card:#2A2A2A;--text:#E0E0E0;--sub:#A0A0A0;
+  --nav-bg:rgba(30,30,30,0.55);--border:rgba(255,255,255,0.06);
+  --accent-light:#3A4A5A;--shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+.app-bg{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-2;background-color:var(--bg);background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-color .4s}
+.sidebar{width:18%;min-width:170px;max-width:210px;background:var(--nav-bg);backdrop-filter:blur(var(--nav-blur));-webkit-backdrop-filter:blur(var(--nav-blur));display:flex;flex-direction:column;align-items:center;padding-top:20px;border-right:1px solid var(--border);flex-shrink:0;gap:2px;overflow-y:auto;position:relative;z-index:2;transition:background .3s}
+.avatar-wrap{width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:6px;cursor:pointer;overflow:hidden;position:relative;background-size:cover;background-position:center;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:.3s;border:3px solid rgba(255,255,255,0.6);z-index:10}
+.avatar-wrap:hover{transform:scale(1.06)}
+.avatar-wrap img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.nick{font-size:13px;color:var(--text);margin-bottom:14px;font-weight:600;cursor:pointer;padding:3px 10px;border-radius:10px;transition:.2s;z-index:10;position:relative}
+.nick:hover{background:rgba(128,128,128,0.1)}
+.nav-item{width:calc(100% - 20px);display:flex;flex-direction:column;align-items:center;padding:13px 0;margin:2px 10px;border-radius:14px;cursor:pointer;transition:.25s;gap:4px;font-size:13px}
+.nav-item:hover{background:rgba(255,255,255,0.5)}
+.nav-item.active{background:rgba(255,255,255,0.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.nav-item .icon{font-size:22px;position:relative;z-index:1}
+.nav-item .label{color:var(--sub);font-size:11px;font-weight:500;position:relative;z-index:1}
+.nav-item.active .label{color:var(--accent);font-weight:700}
+.achievement-section{width:100%;padding:10px 14px;margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.achievement-title{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:2px;font-weight:600;cursor:pointer}
+.achievement-title:hover{color:var(--accent)}
+.achievement-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.badge-icon{width:28px;height:28px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.badge-icon.earned{background:var(--accent);color:#fff;box-shadow:0 3px 12px rgba(0,0,0,0.15)}
+.badge-icon:hover{transform:scale(1.25)}
+.main{flex:1;padding:18px 26px;overflow-y:auto;position:relative;z-index:1;height:100vh;-webkit-overflow-scrolling:touch}
+.greeting{font-size:22px;color:var(--accent);margin-bottom:4px;font-weight:700;letter-spacing:0.5px}
+.greeting-sub{font-size:12px;color:var(--sub);margin-bottom:14px}
+.domains{display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.dom{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:30px;background:var(--card);box-shadow:var(--shadow);cursor:pointer;font-size:14px;transition:.25s;border:2px solid transparent}
+.dom.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 20px rgba(0,0,0,0.12)}
+.dom.active span{color:#fff;font-weight:700}
+.module{display:none}
+.module.active{display:block}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);transition:.25s}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.06)}
+.btn{background:var(--accent-light);color:var(--accent);border:none;border-radius:30px;padding:8px 18px;font-size:13px;cursor:pointer;transition:.25s;white-space:nowrap;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin:2px;min-height:36px;min-width:44px}
+.btn:hover{opacity:.9;transform:translateY(-2px)}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+.btn-primary:hover{box-shadow:0 6px 24px rgba(0,0,0,0.2)}
+.btn2{background:#E8F5EC;color:var(--accent2)}
+.btn3{background:#FFF4EB;color:var(--accent3)}
+.btn-sm{padding:4px 12px;font-size:11px;min-height:28px;min-width:36px;font-weight:500}
+.fab{position:fixed;right:34px;bottom:56px;width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;font-size:30px;border:none;box-shadow:0 6px 24px rgba(0,0,0,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:.3s}
+.fab:hover{transform:scale(1.08)}
+.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.checkbox{width:30px;height:30px;border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:.25s;font-size:16px;color:transparent}
+.checkbox.done{background:var(--accent);color:#fff}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);justify-content:center;align-items:center;z-index:100}
+.modal.show{display:flex}
+.modal-box{background:var(--card);border-radius:20px;padding:24px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2)}
+.modal-box h3{color:var(--accent);margin-bottom:14px;font-size:18px}
+input,textarea,select{border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:10px 14px;font-size:14px;width:100%;margin:5px 0;font-family:inherit;background:var(--card);color:var(--text);transition:.25s}
+body.night input,body.night textarea,body.night select{border-color:rgba(255,255,255,0.1)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+textarea{min-height:80px;resize:vertical}
+.tag{display:inline-block;padding:4px 12px;border-radius:16px;font-size:11px;background:var(--accent-light);margin:2px;cursor:pointer;font-weight:500;transition:.2s}
+.tag.active{background:var(--accent);color:#fff}
+.badge{display:inline-block;background:var(--accent);color:#fff;border-radius:16px;padding:2px 9px;font-size:10px;margin-left:4px;font-weight:600}
+.subject-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.subject-tab{padding:5px 14px;border-radius:20px;background:var(--accent-light);color:var(--accent);font-size:12px;cursor:pointer;font-weight:500;transition:.2s;border:2px solid transparent}
+.subject-tab.active{background:var(--accent);color:#fff}
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:6px}
+.heatmap-cell{aspect-ratio:1;border-radius:4px;background:rgba(0,0,0,0.05);min-width:16px;transition:.2s;cursor:pointer}
+.heatmap-cell:hover{transform:scale(1.5);z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.stat-mini{text-align:center;padding:12px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+.stat-mini .val{font-size:24px;font-weight:700;color:var(--accent)}
+.stat-mini .lbl{font-size:11px;color:var(--sub);margin-top:2px;font-weight:500}
+.word-table{width:100%;border-collapse:collapse}
+.word-table td{padding:10px 12px;vertical-align:middle}
+.word-table .en-col{font-size:16px;font-weight:600;text-align:left;width:40%}
+.word-table .cn-col{font-size:15px;text-align:left;width:40%;color:var(--sub)}
+.word-table .action-col{text-align:right;width:20%}
+.word-table tr{border-bottom:1px solid rgba(0,0,0,0.06)}
+body.night .word-table tr{border-bottom-color:rgba(255,255,255,0.06)}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;margin-top:8px}
+.calendar-cell{aspect-ratio:1;background:var(--card);cursor:pointer;position:relative;overflow:hidden;box-shadow:0 0 0 1px var(--border);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:12px;font-weight:600;transition:.2s}
+.calendar-cell:hover{box-shadow:0 4px 16px rgba(0,0,0,0.2);z-index:2}
+.calendar-cell .day-num{position:absolute;top:6px;left:8px;z-index:2;font-size:13px;font-weight:700}
+.calendar-cell .icons-row{position:absolute;bottom:4px;right:4px;z-index:2;display:flex;gap:2px;font-size:13px;background:rgba(255,255,255,0.7);border-radius:10px;padding:2px 6px}
+.pomodoro-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s;opacity:1}
+.pomodoro-overlay.hidden{opacity:0;pointer-events:none}
+.pomodoro-timer{font-size:96px;font-weight:200;color:var(--accent);letter-spacing:6px}
+.countdown-badge{background:var(--card);border-radius:24px;padding:10px 18px;font-size:14px;font-weight:700;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:8px;color:var(--accent)}
+.slider-row{display:flex;align-items:center;gap:8px;margin:4px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--accent)}
+.achievement-panel{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 0}
+.ach-item{text-align:center;padding:8px;border-radius:12px;background:var(--card);box-shadow:var(--shadow);opacity:0.5}
+.ach-item.earned{opacity:1}
+.ach-item .ach-icon{font-size:24px}
+.ach-item .ach-name{font-size:10px;color:var(--text);margin-top:4px}
+.day-card{background:var(--card);border-radius:20px;overflow:hidden;width:340px;max-width:90vw;box-shadow:0 16px 48px rgba(0,0,0,0.2)}
+.day-card .day-img{width:100%;height:260px;background-size:cover;background-position:center;position:relative;background-color:#f5f5f5}
+.day-card .day-info{padding:18px}
+.day-card .day-icons{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.day-card .day-note{font-size:15px;color:var(--text);margin-bottom:12px;min-height:20px}
+</style>
 </head>
 <body>
 <div class="app-bg" id="appBg"></div>
@@ -144,8 +142,8 @@
 </div>
 
 <script>
-// ==================== 数据核心 ====================
-const STORAGE_KEY = 'fashuo_v21';
+// ==================== 完整数据核心 ====================
+const STORAGE_KEY = 'fashuo_v22';
 let D = {
   domain:'major', nav:'daily', dateOffset:0,
   tasks:{}, templates:[], errors:{major:[],politics:[]},
@@ -159,7 +157,6 @@ let D = {
 const PRESET_SUBJECTS = ['刑法','民法','法制史','宪法','法理学'];
 const CALENDAR_ICONS = ['📖','🎒','✈️','🍕','🏃','🎮','🎨','💼','🛒','❤️','🎵','💤','☕','💻','📝','🎂','🌧️','🌞','🚗','🏠'];
 
-// 完整的成就列表（54个）
 const ACHIEVEMENTS = [
   {id:'checkin_1',icon:'👣',name:'脚印轻得像没来过',cond:()=>D.checkins.length>=1},
   {id:'checkin_3',icon:'🦎',name:'三天打鱼两天晒网的鱼',cond:()=>D.checkins.length>=3},
@@ -210,21 +207,18 @@ const ACHIEVEMENTS = [
   {id:'nickname_3',icon:'🎭',name:'身份还在探索中',cond:()=>(D._nickChanges||0)>=3},
   {id:'export_5',icon:'🗄️',name:'缺乏安全感的仓鼠',cond:()=>(D._exportCount||0)>=5},
   {id:'theme_5',icon:'🎨',name:'调色盘转世',cond:()=>(D._themeChanges||0)>=5},
-  {id:'daily_combo',icon:'🎡',name:'生活丰富到可疑',cond:()=>{ let cnt=0; Object.values(D.calendar).forEach(d=>{ if(d.icons&&d.icons.includes('学习')&&d.icons.includes('运动')&&d.icons.includes('美食')) cnt++; }); return cnt>=3; }},
-  {id:'full_day',icon:'🎪',name:'一天当成三天用',cond:()=>{ let cnt=0; Object.entries(D.tasks).forEach(([date,arr])=>{ if(arr.filter(t=>t.done).length>=5 && D.pomodoroHistory.filter(p=>p.date===date).length>=2 && (D.recites.major||[]).filter(r=>r.date===date).length+(D.recites.politics||[]).filter(r=>r.date===date).length>=10) cnt++; }); return cnt>=1; }},
-  {id:'all_subjects',icon:'🎨',name:'挂科调色盘',cond:()=>PRESET_SUBJECTS.every(s=> (D.errors.major||[]).some(e=>e.subject===s)||(D.errors.politics||[]).some(e=>e.subject===s))}
+  {id:'daily_combo',icon:'🎡',name:'生活丰富到可疑',cond:()=>{let cnt=0;Object.values(D.calendar).forEach(d=>{if(d.icons&&d.icons.includes('学习')&&d.icons.includes('运动')&&d.icons.includes('美食'))cnt++});return cnt>=3}},
+  {id:'full_day',icon:'🎪',name:'一天当成三天用',cond:()=>{let cnt=0;Object.entries(D.tasks).forEach(([date,arr])=>{if(arr.filter(t=>t.done).length>=5&&D.pomodoroHistory.filter(p=>p.date===date).length>=2)cnt++});return cnt>=1}},
+  {id:'all_subjects',icon:'🎨',name:'挂科调色盘',cond:()=>PRESET_SUBJECTS.every(s=>(D.errors.major||[]).some(e=>e.subject===s)||(D.errors.politics||[]).some(e=>e.subject===s))}
 ];
 
 function totalErrors(){return (D.errors.major||[]).length+(D.errors.politics||[]).length}
 function totalRecites(){return (D.recites.major||[]).length+(D.recites.politics||[]).length}
 function pomoTotalHours(){return D.pomodoroHistory.reduce((s,h)=>s+(h.duration||0),0)/60}
-function getAvgErrorAccuracy(){
-  const a=[...(D.errors.major||[]),...(D.errors.politics||[])];
-  if(!a.length)return 0;return a.reduce((s,e)=>s+predictAcc(e),0)/a.length;
-}
+function getAvgErrorAccuracy(){const a=[...(D.errors.major||[]),...(D.errors.politics||[])];if(!a.length)return 0;return a.reduce((s,e)=>s+predictAcc(e),0)/a.length}
 function predictAcc(e){if(!e.history||!e.history.length)return 50;const c=e.history.filter(h=>h.correct).length;return Math.round(c/e.history.length*100)}
-function calWordCount(word){let cnt=0;Object.values(D.calendar).forEach(d=>{if(d.note&&d.note.includes(word))cnt++;if(d.icons&&d.icons.includes(word))cnt++;});return cnt}
-function checkAchievements(){let u=false;ACHIEVEMENTS.forEach(a=>{if(!D.achievements.includes(a.id)&&a.cond()){D.achievements.push(a.id);u=true;toast(`🏅 解锁：${a.name}`);}});if(u)save()}
+function calWordCount(word){let cnt=0;Object.values(D.calendar).forEach(d=>{if(d.note&&d.note.includes(word))cnt++;if(d.icons&&d.icons.includes(word))cnt++});return cnt}
+function checkAchievements(){let u=false;ACHIEVEMENTS.forEach(a=>{if(!D.achievements.includes(a.id)&&a.cond()){D.achievements.push(a.id);u=true;toast(`🏅 解锁：${a.name}`)}});if(u)save()}
 
 function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(D))}
 function load(){
@@ -241,17 +235,9 @@ function todayStr(){const d=new Date();d.setDate(d.getDate()+D.dateOffset);retur
 function fmtDate(s){const d=new Date(s);return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`}
 function domLabel(){const m={major:'专业课',politics:'政治',english:'英语'};return m[D.domain]||'专业课'}
 
-function applyNavStyle(){const nav=document.getElementById('sidebar');if(nav){nav.style.background=`rgba(255,255,255,${D.settings.navOpacity})`;nav.style.backdropFilter=`blur(${D.settings.navBlur}px)`;}}
-function updateAppBg(){
-  const bg=document.getElementById('appBg');
-  if(D.settings.bgImage){bg.style.backgroundImage=`url(${D.settings.bgImage})`;bg.style.backgroundSize='cover';bg.style.backgroundPosition='center';bg.style.opacity='1'}
-  else{bg.style.backgroundImage='';bg.style.opacity='1'}
-}
-function updateGreeting(){
-  const h=new Date().getHours();let g='';
-  if(h<6)g='夜深了 🌙';else if(h<9)g='早安 ☀️';else if(h<12)g='上午好 🌤️';else if(h<14)g='中午好 ☀️';else if(h<18)g='下午好 🌈';else if(h<22)g='晚上好 🌙';else g='夜深了 🌙';
-  document.getElementById('greetingText').textContent=`👋 ${g}，${D.profile.nickname}`;
-}
+function applyNavStyle(){const nav=document.getElementById('sidebar');if(nav){nav.style.background=`rgba(255,255,255,${D.settings.navOpacity})`;nav.style.backdropFilter=`blur(${D.settings.navBlur}px)`}}
+function updateAppBg(){const bg=document.getElementById('appBg');if(D.settings.bgImage){bg.style.backgroundImage=`url(${D.settings.bgImage})`;bg.style.backgroundSize='cover';bg.style.backgroundPosition='center';bg.style.opacity='1'}else{bg.style.backgroundImage='';bg.style.opacity='1'}}
+function updateGreeting(){const h=new Date().getHours();let g='';if(h<6)g='夜深了 🌙';else if(h<9)g='早安 ☀️';else if(h<12)g='上午好 🌤️';else if(h<14)g='中午好 ☀️';else if(h<18)g='下午好 🌈';else if(h<22)g='晚上好 🌙';else g='夜深了 🌙';document.getElementById('greetingText').textContent=`👋 ${g}，${D.profile.nickname}`}
 
 function renderAll(){renderNav();renderDomains();showModule();updateAppBg();updateGreeting();checkAchievements();applyNavStyle();save()}
 
@@ -262,21 +248,19 @@ function renderNav(){
   const earned=ACHIEVEMENTS.filter(a=>D.achievements.includes(a.id));
   s.innerHTML=`<div class="avatar-wrap" onclick="uploadAvatar()" style="${D.profile.avatar?'background-image:url('+D.profile.avatar+');background-size:cover':''}">${D.profile.avatar?'':av}</div><div class="nick" onclick="editNickname()">${esc(D.profile.nickname)}</div>`;
   items.forEach(it=>{const d=document.createElement('div');d.className='nav-item'+(D.nav===it.k?' active':'');d.innerHTML=`<span class="icon">${it.i}</span><span class="label">${it.l}</span>`;d.onclick=()=>{D.nav=it.k;renderAll()};s.appendChild(d)});
-  // 成就入口
   const achSec=document.createElement('div');achSec.className='achievement-section';
   achSec.innerHTML=`<div class="achievement-title" onclick="showAchievementPanel()">🏆 成就 (${earned.length}/${ACHIEVEMENTS.length})</div><div class="achievement-badges">${earned.slice(0,6).map(a=>`<span class="badge-icon earned" title="${a.name}">${a.icon}</span>`).join('')}${earned.length>6?'<span class="badge-icon">···</span>':''}</div>`;
   s.appendChild(achSec);
 }
+
 function showAchievementPanel(){
   const earned=D.achievements;
   let html='<div class="modal-box" style="max-width:600px"><h3>🏆 成就墙</h3><div class="achievement-panel">';
-  ACHIEVEMENTS.forEach(a=>{
-    const isEarned=earned.includes(a.id);
-    html+=`<div class="ach-item${isEarned?' earned':''}" title="${a.name}"><div class="ach-icon">${isEarned?a.icon:'🔒'}</div><div class="ach-name">${isEarned?a.name:'???'}</div></div>`;
-  });
+  ACHIEVEMENTS.forEach(a=>{const isEarned=earned.includes(a.id);html+=`<div class="ach-item${isEarned?' earned':''}" title="${a.name}"><div class="ach-icon">${isEarned?a.icon:'🔒'}</div><div class="ach-name">${isEarned?a.name:'???'}</div></div>`});
   html+='</div><button class="btn" onclick="closeModal()">关闭</button></div>';
   openModal(html);
 }
+
 function renderDomains(){
   const c=document.getElementById('domainTabs');
   if(['calendar','settings'].includes(D.nav)){c.innerHTML='';return}
@@ -302,36 +286,20 @@ function getSubjectOptions(currentVal,domain){
   return existing.map(s=>`<option value="${esc(s)}" ${currentVal===s?'selected':''}>${esc(s)}</option>`).join('')+`<option value="__custom__">✏️ 其他</option>`;
 }
 
-// ========== 每日计划 ==========
+// ==================== 每日计划 ====================
 function getDayTasks(ds){if(!D.tasks[ds])D.tasks[ds]=[];return D.tasks[ds]}
 function renderDaily(){
   const ds=todayStr();const tasks=getDayTasks(ds);const m=document.getElementById('dailyModule');
   if(!D.checkins.includes(ds)){D.checkins.push(ds);save()}
-  m.innerHTML=`
-    <div class="flex-between"><div class="flex"><button class="btn btn-sm" onclick="shiftDate(-1)">◀</button><strong style="font-size:18px">${fmtDate(ds)}</strong><button class="btn btn-sm" onclick="shiftDate(1)">▶</button><button class="btn btn-sm" onclick="D.dateOffset=0;renderAll()">今天</button><span class="countdown-badge">📅 已签到 ${D.checkins.length} 天</span></div>
-      <div class="flex"><button class="btn btn-sm btn-primary" onclick="openPomodoro()">🍅 专注</button><select id="statRange" onchange="updateStats()" style="width:auto;margin:0;font-size:11px;padding:5px 8px"><option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select><button class="btn btn-sm" onclick="toggleStats()">📊 统计</button></div></div>
-    <div id="taskListView">${renderTaskList(tasks,ds)}</div><div id="statsView" style="display:none"><div class="card">📈 热力图<div class="heatmap-grid" id="heatmap"></div></div><div class="stats-row" id="statsNumbers"></div><div class="card">📋 复盘<div id="reportContent"></div><button class="btn btn-sm" onclick="addExamRecord()">+ 模考</button></div></div>
-    <button class="fab" onclick="openTaskForm()">+</button>`;
+  m.innerHTML=`<div class="flex-between"><div class="flex"><button class="btn btn-sm" onclick="shiftDate(-1)">◀</button><strong style="font-size:18px">${fmtDate(ds)}</strong><button class="btn btn-sm" onclick="shiftDate(1)">▶</button><button class="btn btn-sm" onclick="D.dateOffset=0;renderAll()">今天</button><span class="countdown-badge">📅 已签到 ${D.checkins.length} 天</span></div><div class="flex"><button class="btn btn-sm btn-primary" onclick="openPomodoro()">🍅 专注</button><select id="statRange" onchange="updateStats()" style="width:auto;margin:0;font-size:11px;padding:5px 8px"><option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select><button class="btn btn-sm" onclick="toggleStats()">📊 统计</button></div></div><div id="taskListView">${renderTaskList(tasks,ds)}</div><div id="statsView" style="display:none"><div class="card">📈 热力图<div class="heatmap-grid" id="heatmap"></div></div><div class="stats-row" id="statsNumbers"></div><div class="card">📋 复盘<div id="reportContent"></div><button class="btn btn-sm" onclick="addExamRecord()">+ 模考</button></div></div><button class="fab" onclick="openTaskForm()">+</button>`;
   if(document.getElementById('statsView').style.display!=='none')updateStats()
 }
-function renderTaskList(tasks,ds){
-  if(!tasks.length)return `<div class="card" style="text-align:center;color:var(--sub);padding:28px">✨ 今天还没有任务<br><small>点右下角 + 开始规划吧</small></div>`;
-  return tasks.map(t=>`<div class="card flex-between" style="opacity:${t.done?0.5:1}"><div class="flex"><div class="checkbox${t.done?' done':''}" onclick="toggleTask('${ds}','${t.id}')">${t.done?'✓':''}</div><div><strong>${esc(t.name)}</strong><br><small>${t.planTime||''}·${t.duration||30}分钟${t.repeatDays?' 🔄':''}</small></div></div><div class="flex"><button class="btn btn-sm" onclick="editTask('${ds}','${t.id}')">✎</button><button class="btn btn-sm" onclick="deleteTask('${ds}','${t.id}')">✕</button></div></div>`).join('')
-}
+function renderTaskList(tasks,ds){if(!tasks.length)return `<div class="card" style="text-align:center;color:var(--sub);padding:28px">✨ 今天还没有任务<br><small>点右下角 + 开始规划吧</small></div>`;return tasks.map(t=>`<div class="card flex-between" style="opacity:${t.done?0.5:1}"><div class="flex"><div class="checkbox${t.done?' done':''}" onclick="toggleTask('${ds}','${t.id}')">${t.done?'✓':''}</div><div><strong>${esc(t.name)}</strong><br><small>${t.planTime||''}·${t.duration||30}分钟${t.repeatDays?' 🔄':''}</small></div></div><div class="flex"><button class="btn btn-sm" onclick="editTask('${ds}','${t.id}')">✎</button><button class="btn btn-sm" onclick="deleteTask('${ds}','${t.id}')">✕</button></div></div>`).join('')}
 function shiftDate(n){D.dateOffset+=n;renderAll()}
 function toggleTask(ds,id){const t=getDayTasks(ds).find(x=>x.id===id);if(t)t.done=!t.done;save();renderDaily()}
 function deleteTask(ds,id){D.tasks[ds]=getDayTasks(ds).filter(x=>x.id!==id);save();renderDaily()}
-function openTaskForm(ed,ei){
-  let t=null;if(ed&&ei)t=getDayTasks(ed).find(x=>x.id===ei);
-  openModal(`<div class="modal-box"><h3>${t?'编辑任务':'新建任务'}</h3><input id="tfName" placeholder="任务名称" value="${t?esc(t.name):''}"><div class="flex"><input id="tfTime" placeholder="时间" value="${t&&t.planTime?t.planTime:''}" style="flex:1"><input id="tfDuration" type="number" placeholder="分钟" value="${t?t.duration:30}" style="flex:1;max-width:100px"></div><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTask('${ed||''}','${ei||''}')">保存</button></div></div>`);
-}
-function saveTask(ed,ei){
-  const name=document.getElementById('tfName').value.trim();if(!name)return toast('请输入任务名称');
-  const pt=document.getElementById('tfTime').value,dur=parseInt(document.getElementById('tfDuration').value)||30;
-  if(ed&&ei){const t=getDayTasks(ed).find(x=>x.id===ei);if(t)Object.assign(t,{name,planTime:pt,duration:dur})}
-  else{getDayTasks(todayStr()).push({id:Date.now().toString(),name,planTime:pt,duration:dur,done:false})}
-  save();closeModal();renderDaily()
-}
+function openTaskForm(ed,ei){let t=null;if(ed&&ei)t=getDayTasks(ed).find(x=>x.id===ei);openModal(`<div class="modal-box"><h3>${t?'编辑任务':'新建任务'}</h3><input id="tfName" placeholder="任务名称" value="${t?esc(t.name):''}"><div class="flex"><input id="tfTime" placeholder="时间" value="${t&&t.planTime?t.planTime:''}" style="flex:1"><input id="tfDuration" type="number" placeholder="分钟" value="${t?t.duration:30}" style="flex:1;max-width:100px"></div><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTask('${ed||''}','${ei||''}')">保存</button></div></div>`)}
+function saveTask(ed,ei){const name=document.getElementById('tfName').value.trim();if(!name)return toast('请输入任务名称');const pt=document.getElementById('tfTime').value,dur=parseInt(document.getElementById('tfDuration').value)||30;if(ed&&ei){const t=getDayTasks(ed).find(x=>x.id===ei);if(t)Object.assign(t,{name,planTime:pt,duration:dur})}else{getDayTasks(todayStr()).push({id:Date.now().toString(),name,planTime:pt,duration:dur,done:false})}save();closeModal();renderDaily()}
 function editTask(ds,id){openTaskForm(ds,id)}
 let statsVisible=false;
 function toggleStats(){statsVisible=!statsVisible;document.getElementById('taskListView').style.display=statsVisible?'none':'block';document.getElementById('statsView').style.display=statsVisible?'block':'none';if(statsVisible)updateStats()}
@@ -348,7 +316,7 @@ function updateStats(){
 }
 function addExamRecord(){const s=prompt('科目：');if(!s)return;const sc=parseFloat(prompt('分数：'));if(isNaN(sc))return;D.exams.push({date:todayStr(),subject:s,score:sc});save();updateStats();toast('成绩已记录')}
 
-// ========== 番茄钟 ==========
+// ==================== 番茄钟 ====================
 let pomodoroInterval=null,pomodoroSeconds=25*60,pomodoroRunning=false,ambientAudio=null;
 function openPomodoro(){document.getElementById('pomodoroOverlay').classList.remove('hidden');pomodoroSeconds=25*60;updateTimerDisplay()}
 function closePomodoro(){if(pomodoroRunning)return;stopAmbient();document.getElementById('pomodoroOverlay').classList.add('hidden')}
@@ -358,69 +326,68 @@ function startPomodoro(){pomodoroRunning=true;document.getElementById('pomodoroS
 function pausePomodoro(){pomodoroRunning=false;clearInterval(pomodoroInterval);document.getElementById('pomodoroStartBtn').textContent='继续'}
 function updateTimerDisplay(){const m=Math.floor(pomodoroSeconds/60),s=pomodoroSeconds%60;document.getElementById('pomodoroTimer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
 function finishPomodoro(){clearInterval(pomodoroInterval);pomodoroRunning=false;document.getElementById('pomodoroStartBtn').textContent='开始专注';pomodoroSeconds=25*60;updateTimerDisplay();const ds=todayStr();getDayTasks(ds).push({id:Date.now().toString(),name:'🍅专注',planTime:'',duration:25,done:true});D.pomodoroHistory.push({date:ds,duration:25});save();renderDaily();stopAmbient();closePomodoro();toast('🍅 专注完成！+25分钟')}
-function setAmbient(type){stopAmbient();document.querySelectorAll('.ambient-btn').forEach(b=>b.classList.remove('active'));if(type!=='none')document.querySelector(`.ambient-btn[onclick*="${type}"]`)?.classList.add('active');}
+function setAmbient(type){stopAmbient();document.querySelectorAll('.ambient-btn').forEach(b=>b.classList.remove('active'));if(type!=='none')document.querySelector(`.ambient-btn[onclick*="${type}"]`)?.classList.add('active')}
 function stopAmbient(){if(ambientAudio){try{ambientAudio.source.stop()}catch(e){}try{ambientAudio.ctx.close()}catch(e){}ambientAudio=null}}
 
-// ========== 错题本、知识点库、背诵、英语 保持之前完整代码 ==========
-// ... (此处省略部分模块的完整代码，但实际文件中已包含，与之前功能一致)
-// 为保证回答长度，不再重复，但您可放心保存使用。
+// ==================== 错题本 ====================
+let errorSubjectFilter='all';
+function renderError(){const m=document.getElementById('errorModule');const list=D.errors[D.domain]||[];const allSubjects=[...new Set(list.map(e=>e.subject))];m.innerHTML=`<div class="flex-between"><h3>📝错题本·${domLabel()}</h3><button class="btn btn-primary" onclick="openErrorForm()">+添加错题</button></div><div class="subject-tabs" id="errSubjectTabs"></div><div class="search-box"><input id="errSearch" placeholder="🔍搜索" oninput="renderErrorList()"></div><div id="errList"></div>`;renderSubjectTabs('errSubjectTabs',allSubjects,errorSubjectFilter,(v)=>{errorSubjectFilter=v;renderErrorList()});renderErrorList()}
+function renderErrorList(){const list=D.errors[D.domain]||[];const q=(document.getElementById('errSearch')?.value||'').toLowerCase();let f=list;if(errorSubjectFilter!=='all')f=f.filter(e=>e.subject===errorSubjectFilter);if(q)f=f.filter(e=>e.subject.toLowerCase().includes(q)||e.chapter.toLowerCase().includes(q)||e.question.toLowerCase().includes(q));const c=document.getElementById('errList');if(!c)return;if(!f.length){c.innerHTML='<div class="card" style="text-align:center;color:var(--sub)">📝暂无错题</div>';return}c.innerHTML=f.map((e,i)=>{const oi=list.indexOf(e),pred=predictAcc(e),color=pred>=70?'var(--accent2)':pred>=40?'var(--accent3)':'#D05555';return `<div class="card"><div class="flex-between"><span><strong>${esc(e.subject)}</strong>·${esc(e.chapter)}[${e.type}]</span><span class="prediction-badge" style="background:${color}20;color:${color}">预测${pred}%</span></div><div>${esc(e.question)}</div>${e.type==='客观'&&e.options?`<div style="font-size:12px;color:var(--sub)">${e.options.map(o=>esc(o.key)+'.'+esc(o.text)).join(' | ')}</div>`:''}<div class="flex"><button class="btn btn-sm" onclick="reviewError(${oi})">重做</button><button class="btn btn-sm" onclick="editError(${oi})">✎</button><button class="btn btn-sm" onclick="deleteError(${oi})">✕</button></div></div>`}).join('')}
+function openErrorForm(ei){let e=null;if(ei!==undefined)e=D.errors[D.domain][ei];openModal(`<div class="modal-box"><h3>${e?'编辑':'新增'}错题</h3><select id="errSubject" onchange="onErrSubChange()">${getSubjectOptions(e?e.subject:'',D.domain)}</select><input id="errSubjectCustom" placeholder="自定义科目" style="display:none" value="${e&&!PRESET_SUBJECTS.includes(e.subject)?esc(e.subject):''}"><input id="errChapter" placeholder="章节" value="${e?esc(e.chapter):''}"><select id="errType"><option value="客观">客观题</option><option value="主观">主观题</option></select><textarea id="errQuestion" placeholder="题目内容" style="min-height:100px">${e?esc(e.question):''}</textarea><input id="errAnswer" placeholder="正确答案" value="${e?esc(e.answer):''}"><textarea id="errNote" placeholder="知识点笔记" style="min-height:80px">${e&&e.note?esc(e.note):''}</textarea><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveError(${ei!==undefined?ei:-1})">保存</button></div></div>`)}
+function onErrSubChange(){const s=document.getElementById('errSubject'),c=document.getElementById('errSubjectCustom');c.style.display=s.value==='__custom__'?'block':'none'}
+function saveError(ei){const sel=document.getElementById('errSubject'),subject=sel.value==='__custom__'?document.getElementById('errSubjectCustom').value.trim():sel.value;if(!subject)return toast('请选择科目');const ch=document.getElementById('errChapter').value.trim(),ty=document.getElementById('errType').value,q=document.getElementById('errQuestion').value.trim(),a=document.getElementById('errAnswer').value.trim(),n=document.getElementById('errNote').value.trim();if(!q)return toast('题目必填');const err={id:Date.now().toString(),subject,chapter:ch,type:ty,question:q,answer:a,options:[],note:n,history:[]};if(ei>=0){const old=D.errors[D.domain][ei];err.history=old.history||[];err.id=old.id;D.errors[D.domain][ei]=err}else{D.errors[D.domain].push(err)}if(n){D.knowledge[D.domain].push({id:Date.now().toString(),subject,chapter:ch,content:n,source:'error',type:'normal'})}save();closeModal();renderError()}
+function editError(i){openErrorForm(i)}
+function deleteError(i){D.errors[D.domain].splice(i,1);save();renderError()}
+function reviewError(i){const e=D.errors[D.domain][i];openModal(`<div class="modal-box"><h3>回顾错题</h3><p><strong>${esc(e.subject)}·${esc(e.chapter)}</strong></p><p>${esc(e.question)}</p><textarea id="reviewSubj" placeholder="你的答案"></textarea><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitReview(${i})">提交</button></div><div id="reviewResult" style="margin-top:8px;display:none"></div></div>`)}
+function submitReview(i){const e=D.errors[D.domain][i];let u=document.getElementById('reviewSubj')?.value||'';const ok=u.trim()===e.answer.trim();e.history.push({date:new Date().toISOString(),correct:ok});const rr=document.getElementById('reviewResult');rr.style.display='block';rr.innerHTML=ok?'<span style="color:var(--accent2)">✅正确</span>':'<span style="color:#D05555">❌答案：'+esc(e.answer)+'</span>';save()}
 
-// ========== 日历（新版ins风放大卡片） ==========
+// ==================== 知识点库 ====================
+let knowledgeSubjectFilter='all';
+function renderKnowledge(){const m=document.getElementById('knowledgeModule');const list=D.knowledge[D.domain]||[];const allSubjects=[...new Set(list.map(k=>k.subject))];m.innerHTML=`<div class="flex-between"><h3>📚知识点库·${domLabel()}</h3><button class="btn btn-primary" onclick="openKnowledgeForm()">+添加</button></div><div class="subject-tabs" id="kSubjectTabs"></div><div class="search-box"><input id="kSearch" placeholder="🔍搜索" oninput="renderKnowledgeList()"></div><div id="kList"></div>`;renderSubjectTabs('kSubjectTabs',allSubjects,knowledgeSubjectFilter,(v)=>{knowledgeSubjectFilter=v;renderKnowledgeList()});renderKnowledgeList()}
+function renderKnowledgeList(){const list=D.knowledge[D.domain]||[];const q=(document.getElementById('kSearch')?.value||'').toLowerCase();let f=list;if(knowledgeSubjectFilter!=='all')f=f.filter(k=>k.subject===knowledgeSubjectFilter);if(q)f=f.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));const c=document.getElementById('kList');if(!c)return;if(!f.length){c.innerHTML='<div class="card" style="color:var(--sub)">📚暂无知识点</div>';return}c.innerHTML=f.map((k,i)=>{const oi=list.indexOf(k);return`<div class="card"><div class="flex-between"><strong>${esc(k.subject)}·${esc(k.chapter)}</strong><div class="flex"><button class="btn btn-sm" onclick="editKnowledge(${oi})">✎</button><button class="btn btn-sm" onclick="deleteKnowledge(${oi})">✕</button></div></div><div>${esc(k.content)}</div><button class="btn btn-sm" onclick="addKnowledgeToRecite(${oi})">💡加入背诵</button></div>`}).join('')}
+function openKnowledgeForm(ei){let k=null;if(ei!==undefined)k=D.knowledge[D.domain][ei];openModal(`<div class="modal-box"><h3>${k?'编辑':'添加'}知识点</h3><select id="kSubject">${getSubjectOptions(k?k.subject:'',D.domain)}</select><input id="kChapter" placeholder="章节" value="${k?esc(k.chapter):''}"><textarea id="kContent" placeholder="内容" style="min-height:120px">${k?esc(k.content):''}</textarea><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveKnowledge(${ei!==undefined?ei:-1})">保存</button></div></div>`)}
+function saveKnowledge(ei){const sel=document.getElementById('kSubject'),subject=sel.value;if(!subject)return toast('请选择科目');const ch=document.getElementById('kChapter').value.trim(),co=document.getElementById('kContent').value.trim();if(!co)return toast('内容必填');const kn={id:Date.now().toString(),subject,chapter:ch,content:co,source:'manual',type:'normal'};if(ei>=0){kn.id=D.knowledge[D.domain][ei].id;D.knowledge[D.domain][ei]=kn}else{D.knowledge[D.domain].push(kn)}save();closeModal();renderKnowledge()}
+function editKnowledge(i){openKnowledgeForm(i)}
+function deleteKnowledge(i){D.knowledge[D.domain].splice(i,1);save();renderKnowledge()}
+function addKnowledgeToRecite(i){const k=D.knowledge[D.domain][i];if(!k)return;D.recites[D.domain].push({id:Date.now().toString(),subject:k.subject,chapter:k.chapter,content:k.content,stage:0,nextReview:todayStr()});save();toast('已加入背诵')}
+
+// ==================== 背诵 ====================
+let reciteSubjectFilter='all';
+function renderRecite(){const m=document.getElementById('reciteModule');const all=D.recites[D.domain]||[];const allSubjects=[...new Set(all.map(k=>k.subject))];m.innerHTML=`<h3>💡背诵管理·${domLabel()}<span class="badge">${all.length}</span></h3><div class="subject-tabs" id="reciteSubjectTabs"></div><div class="flex" style="margin-bottom:8px"><input class="inline-input" id="reciteSearch" placeholder="🔍搜索" oninput="renderRecite()" style="flex:1;min-width:200px"><select id="reciteSubject" class="inline-input" style="width:auto"><option value="">科目</option>${getSubjectOptions('',D.domain)}</select><input class="inline-input" id="reciteChapter" placeholder="章节"><input class="inline-input" id="reciteContent" placeholder="内容" style="flex:2"><button class="btn btn-primary btn-sm" onclick="addReciteItem()">+添加</button></div>`;renderSubjectTabs('reciteSubjectTabs',allSubjects,reciteSubjectFilter,(v)=>{reciteSubjectFilter=v;renderRecite()});const q=(document.getElementById('reciteSearch')?.value||'').toLowerCase();let filtered=all;if(reciteSubjectFilter!=='all')filtered=filtered.filter(k=>k.subject===reciteSubjectFilter);if(q)filtered=filtered.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));const due=filtered.filter(k=>k.nextReview&&k.nextReview<=todayStr()),fuzzy=filtered.filter(k=>k.stage>=1&&k.stage<5&&k.nextReview>todayStr()),mastered=filtered.filter(k=>k.stage>=5);const container=document.createElement('div');container.innerHTML=`<div class="recite-zone"><h4><span style="width:10px;height:10px;border-radius:50%;background:#D05555;display:inline-block;margin-right:6px"></span>待复习(${due.length})</h4>${due.map((k,i)=>{const ai=all.indexOf(k);return reciteCard(k,ai)}).join('')||'<div class="card">暂无</div>'}</div><div class="recite-zone"><h4><span style="width:10px;height:10px;border-radius:50%;background:var(--accent3);display:inline-block;margin-right:6px"></span>模糊中(${fuzzy.length})</h4>${fuzzy.map((k,i)=>{const ai=all.indexOf(k);return reciteCard(k,ai)}).join('')||'<div class="card">暂无</div>'}</div><div class="recite-zone"><h4><span style="width:10px;height:10px;border-radius:50%;background:var(--accent2);display:inline-block;margin-right:6px"></span>已掌握(${mastered.length})</h4>${mastered.map((k,i)=>{const ai=all.indexOf(k);return reciteCard(k,ai)}).join('')||'<div class="card">暂无</div>'}</div>`;m.appendChild(container)}
+function reciteCard(k,idx){return `<div class="card flex-between"><div><strong>${esc(k.subject)}·${esc(k.chapter)}</strong><br><small>${esc(k.content)}</small><br><small>阶段:${k.stage||0}|下次:${k.nextReview||'未安排'}</small></div><div class="flex"><button class="btn btn-sm btn2" onclick="reciteFeedback(${idx},'good')">✅</button><button class="btn btn-sm btn3" onclick="reciteFeedback(${idx},'fuzzy')">🤔</button><button class="btn btn-sm" onclick="reciteFeedback(${idx},'forgot')">❌</button><button class="btn btn-sm" onclick="deleteReciteItem(${idx})">🗑</button></div></div>`}
+function addReciteItem(){const sel=document.getElementById('reciteSubject'),subject=sel.value;if(!subject)return toast('请选择科目');const c=document.getElementById('reciteChapter')?.value.trim(),co=document.getElementById('reciteContent')?.value.trim();if(!co)return toast('内容必填');D.recites[D.domain].push({id:Date.now().toString(),subject,chapter:c,content:co,stage:0,nextReview:todayStr()});save();renderRecite();toast('已添加')}
+function deleteReciteItem(i){D.recites[D.domain].splice(i,1);save();renderRecite()}
+function reciteFeedback(idx,type){const k=D.recites[D.domain][idx];if(!k)return;const intervals=[1,2,4,7,15,30,60,120];if(type==='good')k.stage=Math.min((k.stage||0)+1,intervals.length-1);else if(type==='fuzzy')k.stage=Math.max((k.stage||0)-1,0);else k.stage=0;k.nextReview=new Date(Date.now()+intervals[k.stage]*86400000).toISOString().split('T')[0];save();renderRecite()}
+
+function renderSubjectTabs(containerId,subjects,currentFilter,callback){const container=document.getElementById(containerId);if(!container)return;const tabs=['all',...subjects.filter(s=>s)];container.innerHTML=tabs.map(s=>{const label=s==='all'?'全部':s,active=currentFilter===s;return`<span class="subject-tab${active?' active':''}" onclick="event.stopPropagation();(${callback.toString()})('${s.replace(/'/g,"\\'")}')">${label}</span>`}).join('')}
+
+// ==================== 英语 ====================
+let wordView='all';
+function renderEnglish(){D.domain='english';const m=document.getElementById('englishModule');m.innerHTML=`<div class="flex-between"><h3>🔤英语单词<span class="badge">${D.words.length}</span></h3><button class="btn btn-primary btn-sm" onclick="startWordQuiz()">📝多选测试</button></div><div class="card"><div class="flex"><input class="inline-input" id="wordEnInput" placeholder="英文"><input class="inline-input" id="wordCnInput" placeholder="中文"><button class="btn btn-primary btn-sm" onclick="addWordInline()">添加</button></div></div><div class="flex" style="margin:8px 0"><button class="btn btn-sm" onclick="toggleWordView('all')">全部</button><button class="btn btn-sm" onclick="toggleWordView('en')">仅英文</button><button class="btn btn-sm" onclick="toggleWordView('cn')">仅中文</button><input class="inline-input" id="wordSearch" placeholder="搜索" oninput="renderWordList()" style="flex:1"></div><div id="wordListContainer"></div>`;renderWordList()}
+function renderWordList(){const container=document.getElementById('wordListContainer');if(!container)return;const q=(document.getElementById('wordSearch')?.value||'').toLowerCase();let list=D.words;if(q)list=list.filter(w=>w.en.toLowerCase().includes(q)||w.cn.includes(q));if(!list.length){container.innerHTML='<div class="card" style="text-align:center;color:var(--sub)">暂无单词</div>';return}let html='<table class="word-table">';list.forEach((w,i)=>{let de=esc(w.en),dc=esc(w.cn);if(wordView==='en')dc='';if(wordView==='cn')de='';html+=`<tr><td class="en-col">${de}</td><td class="cn-col">${dc}</td><td class="action-col"><button class="btn btn-sm" onclick="editWord(${i})">✎</button><button class="btn btn-sm" onclick="deleteWord(${i})">✕</button></td></tr>`});html+='</table>';container.innerHTML=html}
+function addWordInline(){const en=document.getElementById('wordEnInput')?.value.trim(),cn=document.getElementById('wordCnInput')?.value.trim();if(!en||!cn)return toast('都要填');D.words.push({en,cn,stage:0,nextReview:todayStr()});save();renderEnglish()}
+function editWord(i){const w=D.words[i];if(!w)return;openModal(`<div class="modal-box"><h3>编辑单词</h3><input id="editWordEn" placeholder="英文" value="${esc(w.en)}"><input id="editWordCn" placeholder="中文" value="${esc(w.cn)}"><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveWordEdit(${i})">保存</button></div></div>`)}
+function saveWordEdit(i){const en=document.getElementById('editWordEn').value.trim(),cn=document.getElementById('editWordCn').value.trim();if(!en||!cn)return toast('不能为空');D.words[i].en=en;D.words[i].cn=cn;save();closeModal();renderEnglish()}
+function deleteWord(i){D.words.splice(i,1);save();renderEnglish()}
+function toggleWordView(v){wordView=v;renderEnglish()}
+function startWordQuiz(){if(D.words.length<4)return toast('至少4个');const p=[...D.words].sort(()=>Math.random()-0.5),c=p[0],o=[c,...p.slice(1,4)].sort(()=>Math.random()-0.5);openModal(`<div class="modal-box"><h3>选择正确释义</h3><h2>${esc(c.en)}</h2>${o.map(x=>`<button class="btn" style="display:block;width:100%;margin:4px 0" onclick="checkQuiz('${esc(x.cn)}','${esc(c.cn)}','${esc(c.en)}')">${esc(x.cn)}</button>`).join('')}<div style="text-align:right"><button class="btn" onclick="closeModal()">关闭</button></div></div>`)}
+function checkQuiz(ch,co,en){const ok=ch===co;toast(ok?'✅正确':'❌答案：'+co);const w=D.words.find(x=>x.en===en);if(w){const iv=[1,2,4,7,15,30,60,120];if(ok)w.stage=Math.min((w.stage||0)+1,iv.length-1);else w.stage=0;w.nextReview=new Date(Date.now()+iv[w.stage]*86400000).toISOString().split('T')[0];save()}closeModal()}
+
+// ==================== 日历 ====================
 let calYear,calMonth,selectedCalIcons=[];
-function renderCalendar(){
-  const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth()+1;
-  document.getElementById('calendarModule').innerHTML='';
-  renderCalendarMonth()
-}
-function renderCalendarMonth(){
-  const m=document.getElementById('calendarModule');const firstDay=new Date(calYear,calMonth-1,1).getDay(),daysInMonth=new Date(calYear,calMonth,0).getDate(),today=todayStr();
-  let html=`<div class="flex-between"><button class="btn btn-sm" onclick="changeCalMonth(-1)">◀</button><strong>${calYear}年${calMonth}月</strong><button class="btn btn-sm" onclick="changeCalMonth(1)">▶</button></div><div class="calendar-grid">`;
-  ['日','一','二','三','四','五','六'].forEach(h=>html+=`<div style="text-align:center;font-weight:700;padding:6px">${h}</div>`);
-  let day=1;
-  for(let i=0;i<6;i++)for(let j=0;j<7;j++){
-    if((i===0&&j<firstDay)||day>daysInMonth){html+='<div class="calendar-cell" style="background:transparent;box-shadow:none"></div>';continue}
-    const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`,entry=D.calendar[ds]||{images:[],icons:[],note:''};
-    const img=entry.images&&entry.images.length>0?entry.images[0]:'',icons=(entry.icons||[]).slice(0,3);
-    const bgStyle=img?`background-image:url(${img});background-size:cover;background-position:center;`:'';
-    html+=`<div class="calendar-cell" style="${bgStyle}${ds===today?'border:2px solid var(--accent);':''}" onclick="openDayCard('${ds}')"><span class="day-num" style="${img?'color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5)':''}">${day}</span>${icons.length>0?`<div class="icons-row">${icons.join('')}</div>`:''}</div>`;
-    day++;
-  }
-  html+='</div>';m.innerHTML=html;
-}
+function renderCalendar(){const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth()+1;document.getElementById('calendarModule').innerHTML='';renderCalendarMonth()}
+function renderCalendarMonth(){const m=document.getElementById('calendarModule');const firstDay=new Date(calYear,calMonth-1,1).getDay(),daysInMonth=new Date(calYear,calMonth,0).getDate(),today=todayStr();let html=`<div class="flex-between"><button class="btn btn-sm" onclick="changeCalMonth(-1)">◀</button><strong>${calYear}年${calMonth}月</strong><button class="btn btn-sm" onclick="changeCalMonth(1)">▶</button></div><div class="calendar-grid">`;['日','一','二','三','四','五','六'].forEach(h=>html+=`<div style="text-align:center;font-weight:700;padding:8px;background:var(--accent-light);border-radius:0">${h}</div>`);let day=1;for(let i=0;i<6;i++)for(let j=0;j<7;j++){if((i===0&&j<firstDay)||day>daysInMonth){html+='<div class="calendar-cell" style="background:transparent;box-shadow:none"></div>';continue}const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`,entry=D.calendar[ds]||{images:[],icons:[],note:''};const img=entry.images&&entry.images.length>0?entry.images[0]:'',icons=(entry.icons||[]).slice(0,3);const bgStyle=img?`background-image:url(${img});background-size:cover;background-position:center;`:'background:#fafafa;';html+=`<div class="calendar-cell" style="${bgStyle}${ds===today?'border:3px solid var(--accent);':''}" onclick="openDayCard('${ds}')"><span class="day-num" style="${img?'color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.6)':''}">${day}</span>${icons.length>0?`<div class="icons-row">${icons.join('')}</div>`:''}</div>`;day++}html+='</div>';m.innerHTML=html}
 function changeCalMonth(d){if(d===1){if(calMonth===12){calYear++;calMonth=1}else calMonth++}else{if(calMonth===1){calYear--;calMonth=12}else calMonth--}renderCalendarMonth()}
-function openDayCard(ds){
-  const entry=D.calendar[ds]||{images:[],icons:[],note:''};
-  const img=entry.images&&entry.images.length>0?entry.images[0]:'';
-  const icons=entry.icons||[];
-  const note=entry.note||'';
-  let html=`<div class="day-card">
-    <div class="day-img" style="${img?`background-image:url(${img});`:''}"></div>
-    <div class="day-info">
-      <div class="day-icons">${icons.map(ic=>`<span class="tag active">${ic}</span>`).join('')||'<span style="color:var(--sub)">点击下方添加图标</span>'}</div>
-      <div class="day-note">${note||'添加备注...'}</div>
-      <button class="btn btn-sm" onclick="editDayDetail('${ds}')">编辑</button>
-      <button class="btn btn-sm" onclick="closeModal()">关闭</button>
-    </div>
-  </div>`;
-  openModal(html);
-}
-function editDayDetail(ds){
-  const entry=D.calendar[ds]||{images:[],icons:[],note:''};
-  selectedCalIcons=[...(entry.icons||[])];
-  let imgHtml=entry.images.map((img,i)=>`<div style="position:relative;display:inline-block;margin:4px"><img src="${img}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer" onclick="previewImage('${img}')"><button class="btn btn-sm" style="position:absolute;top:2px;right:2px" onclick="deleteCalImg('${ds}',${i})">✕</button></div>`).join('');
-  openModal(`<div class="modal-box" style="max-width:600px"><h3>编辑 ${fmtDate(ds)}</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${imgHtml||'<p>暂无图片</p>'}</div><input type="file" accept="image/*" onchange="uploadCalImg('${ds}',this)" multiple><div style="margin-top:8px"><strong>图标：</strong>${CALENDAR_ICONS.map(ic=>`<span class="tag${selectedCalIcons.includes(ic)?' active':''}" onclick="toggleCalIcon('${ic}')">${ic}</span>`).join('')}</div><input id="calNote" placeholder="备注" value="${esc(entry.note||'')}"><button class="btn btn-primary" onclick="saveCalDay('${ds}')">保存</button><button class="btn" onclick="closeModal()">取消</button></div>`);
-}
+function openDayCard(ds){const entry=D.calendar[ds]||{images:[],icons:[],note:''};const img=entry.images&&entry.images.length>0?entry.images[0]:'';const icons=entry.icons||[];const note=entry.note||'';let html=`<div class="day-card"><div class="day-img" style="${img?`background-image:url(${img});`:''}"><span style="position:absolute;top:12px;left:16px;font-size:20px;font-weight:700;${img?'color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.5)':'color:var(--text)'}">${fmtDate(ds)}</span></div><div class="day-info"><div class="day-icons">${icons.map(ic=>`<span class="tag active">${ic}</span>`).join('')||'<span style="color:var(--sub);font-size:12px">点击编辑添加图标</span>'}</div><div class="day-note">${note||'点击编辑添加备注...'}</div><div class="flex" style="gap:8px"><button class="btn btn-sm" onclick="editDayDetail('${ds}')">✎ 编辑</button><button class="btn btn-sm" onclick="closeModal()">关闭</button></div></div></div>`;openModal(html)}
+function editDayDetail(ds){const entry=D.calendar[ds]||{images:[],icons:[],note:''};selectedCalIcons=[...(entry.icons||[])];let imgHtml=entry.images.map((img,i)=>`<div style="position:relative;display:inline-block;margin:4px"><img src="${img}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer" onclick="previewImage('${img}')"><button class="btn btn-sm" style="position:absolute;top:2px;right:2px" onclick="deleteCalImg('${ds}',${i})">✕</button></div>`).join('');if(!imgHtml)imgHtml='<p style="color:var(--sub)">暂无图片</p>';openModal(`<div class="modal-box" style="max-width:600px"><h3>编辑 ${fmtDate(ds)}</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${imgHtml}</div><input type="file" accept="image/*" onchange="uploadCalImg('${ds}',this)" multiple><div style="margin-top:8px"><strong>图标：</strong>${CALENDAR_ICONS.map(ic=>`<span class="tag${selectedCalIcons.includes(ic)?' active':''}" onclick="toggleCalIcon('${ic}')">${ic}</span>`).join('')}</div><input id="calNote" placeholder="备注" value="${esc(entry.note||'')}"><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveCalDay('${ds}')">保存</button></div></div>`)}
 function toggleCalIcon(ic){const idx=selectedCalIcons.indexOf(ic);if(idx>=0)selectedCalIcons.splice(idx,1);else selectedCalIcons.push(ic);document.querySelectorAll('.modal-box .tag').forEach(t=>{if(t.textContent===ic)t.classList.toggle('active',selectedCalIcons.includes(ic))})}
 function uploadCalImg(ds,input){const files=input.files;if(!files.length)return;Array.from(files).forEach(f=>{const r=new FileReader();r.onload=function(e){if(!D.calendar[ds])D.calendar[ds]={images:[],icons:[],note:''};D.calendar[ds].images.push(e.target.result);save();closeModal();openDayCard(ds)};r.readAsDataURL(f)})}
 function saveCalDay(ds){if(!D.calendar[ds])D.calendar[ds]={images:[],icons:[],note:''};D.calendar[ds].icons=[...selectedCalIcons];D.calendar[ds].note=document.getElementById('calNote')?.value.trim()||'';save();closeModal();renderCalendarMonth();toast('已保存')}
-function deleteCalImg(ds,i){D.calendar[ds].images.splice(i,1);save();closeModal();renderCalendarMonth()}
+function deleteCalImg(ds,i){D.calendar[ds].images.splice(i,1);if(D.calendar[ds].images.length===0&&D.calendar[ds].icons.length===0&&!D.calendar[ds].note)delete D.calendar[ds];save();closeModal();renderCalendarMonth()}
 function previewImage(src){openModal(`<div class="modal-box" style="text-align:center"><img src="${src}" style="max-width:100%;max-height:70vh;border-radius:10px"><br><button class="btn" onclick="closeModal()">关闭</button></div>`)}
 
-// ========== 设置 ==========
-function renderSettings(){
-  const m=document.getElementById('settingsModule'),presets=['#5B9BD5','#6BBF8A','#F0A060','#9B7EC4','#D05555','#5BA0A0','#E08090','#C8956C','#8A8A8A','#4A90D9'];
-  m.innerHTML=`<div class="card"><h3>🎨主题取色</h3><div class="flex" style="flex-wrap:wrap;gap:6px">${presets.map(c=>`<span style="width:32px;height:32px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${D.settings.accentColor===c?'var(--text)':'transparent'}" onclick="pickColor('${c}')"></span>`).join('')}<input type="color" value="${D.settings.accentColor}" onchange="pickColor(this.value)" style="width:40px;height:32px"></div><div class="slider-row"><span>导航透明度</span><input type="range" min="0" max="100" value="${Math.round(D.settings.navOpacity*100)}" onchange="D.settings.navOpacity=this.value/100;applyNavStyle();save()"></div><div class="slider-row"><span>毛玻璃强度</span><input type="range" min="0" max="40" value="${D.settings.navBlur}" onchange="D.settings.navBlur=parseInt(this.value);applyNavStyle();save()"></div><button class="btn btn-sm" onclick="toggleNight()">${D.settings.nightMode?'☀️白天':'🌙夜晚'}模式</button></div><div class="card"><h3>🖼背景图</h3><input type="file" accept="image/*" onchange="uploadBg(this)"><input type="text" id="bgUrl" placeholder="图片URL" value="${D.settings.bgImage||''}"><button class="btn btn-sm" onclick="applyBgUrl()">应用</button><button class="btn btn-sm" onclick="removeBg()">清除</button></div><div class="card"><h3>📦数据</h3><button class="btn btn-sm" onclick="exportAll()">导出JSON</button><button class="btn btn-sm" onclick="importAll()">导入</button></div><div class="card"><h3>📅考研日期</h3><input type="date" id="examDateInput" value="${D.settings.examDate||''}" onchange="D.settings.examDate=this.value;save();renderAll()"></div>`;
-}
+// ==================== 设置 ====================
+function renderSettings(){const m=document.getElementById('settingsModule'),presets=['#5B9BD5','#6BBF8A','#F0A060','#9B7EC4','#D05555','#5BA0A0','#E08090','#C8956C','#8A8A8A','#4A90D9'];m.innerHTML=`<div class="card"><h3>🎨主题取色</h3><div class="flex" style="flex-wrap:wrap;gap:6px">${presets.map(c=>`<span style="width:32px;height:32px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${D.settings.accentColor===c?'var(--text)':'transparent'}" onclick="pickColor('${c}')"></span>`).join('')}<input type="color" value="${D.settings.accentColor}" onchange="pickColor(this.value)" style="width:40px;height:32px"></div><div class="slider-row"><span>导航透明度</span><input type="range" min="0" max="100" value="${Math.round(D.settings.navOpacity*100)}" onchange="D.settings.navOpacity=this.value/100;applyNavStyle();save()"></div><div class="slider-row"><span>毛玻璃强度</span><input type="range" min="0" max="40" value="${D.settings.navBlur}" onchange="D.settings.navBlur=parseInt(this.value);applyNavStyle();save()"></div><button class="btn btn-sm" onclick="toggleNight()">${D.settings.nightMode?'☀️白天':'🌙夜晚'}模式</button></div><div class="card"><h3>🖼背景图</h3><input type="file" accept="image/*" onchange="uploadBg(this)"><input type="text" id="bgUrl" placeholder="图片URL" value="${D.settings.bgImage||''}"><button class="btn btn-sm" onclick="applyBgUrl()">应用</button><button class="btn btn-sm" onclick="removeBg()">清除</button></div><div class="card"><h3>📦数据</h3><button class="btn btn-sm" onclick="exportAll()">导出JSON</button><button class="btn btn-sm" onclick="importAll()">导入</button></div><div class="card"><h3>📅考研日期</h3><input type="date" id="examDateInput" value="${D.settings.examDate||''}" onchange="D.settings.examDate=this.value;save();renderAll()"></div>`}
 function pickColor(c){D.settings.accentColor=c;D._themeChanges=(D._themeChanges||0)+1;document.documentElement.style.setProperty('--accent',c);save();renderSettings();toast('主题色更新')}
 function toggleNight(){D.settings.nightMode=!D.settings.nightMode;document.body.classList.toggle('night',D.settings.nightMode);save()}
 function uploadBg(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=function(e){D.settings.bgImage=e.target.result;updateAppBg();save()};r.readAsDataURL(f)}
@@ -429,6 +396,7 @@ function removeBg(){D.settings.bgImage='';updateAppBg();save()}
 function exportAll(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='法硕督学备份.json';a.click();D._exportCount=(D._exportCount||0)+1;save();toast('导出成功')}
 function importAll(){const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=function(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);D={...D,...d};save();renderAll();toast('导入成功')}catch(ex){toast('格式错误')}};r.readAsText(f)};i.click()}
 
+// ==================== 初始化 ====================
 function init(){
   document.documentElement.style.setProperty('--accent',D.settings.accentColor||'#5B9BD5');
   if(D.settings.nightMode)document.body.classList.add('night');
@@ -439,6 +407,7 @@ function init(){
   renderAll();
 }
 init();
+window.addEventListener('beforeunload',save);
 </script>
 </body>
 </html>

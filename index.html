@@ -1,177 +1,119 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>法硕督学 · 全能备考舱</title>
-<style>
-:root{
-  --bg:#F8F9FC;--card:#FFFFFF;--accent:#5B9BD5;--accent2:#6BBF8A;--accent3:#F0A060;
-  --accent-light:#EDF4FB;--text:#3A3A3A;--sub:#8A8A8A;--shadow:0 2px 12px rgba(0,0,0,0.04);
-  --radius:14px;--nav-bg:rgba(255,255,255,0.45);--border:rgba(255,255,255,0.5);
-  --nav-blur:18px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
-  background:var(--bg);color:var(--text);display:flex;height:100vh;
-  overflow:hidden;transition:background .4s,color .4s;
-}
-body.night{
-  --bg:#1E1E1E;--card:#2A2A2A;--text:#E0E0E0;--sub:#A0A0A0;
-  --nav-bg:rgba(30,30,30,0.55);--border:rgba(255,255,255,0.06);
-  --accent-light:#3A4A5A;--shadow:0 2px 12px rgba(0,0,0,0.3);
-}
-.app-bg{
-  position:fixed;top:0;left:0;right:0;bottom:0;z-index:-2;
-  background-color:var(--bg);
-  background-size:cover;background-position:center;background-repeat:no-repeat;
-  transition:background-color .4s;
-}
-.sidebar{
-  width:18%;min-width:170px;max-width:210px;
-  background:var(--nav-bg);
-  backdrop-filter:blur(var(--nav-blur));
-  -webkit-backdrop-filter:blur(var(--nav-blur));
-  display:flex;flex-direction:column;align-items:center;
-  padding-top:20px;
-  border-right:1px solid var(--border);
-  flex-shrink:0;gap:2px;overflow-y:auto;
-  position:relative;z-index:2;transition:background .3s;
-}
-.avatar-wrap{
-  width:52px;height:52px;border-radius:50%;
-  background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;margin-bottom:6px;
-  cursor:pointer;overflow:hidden;position:relative;
-  background-size:cover;background-position:center;
-  box-shadow:0 4px 16px rgba(0,0,0,0.1);
-  transition:.3s;border:3px solid rgba(255,255,255,0.6);
-  z-index:10;
-}
-.avatar-wrap:hover{transform:scale(1.06)}
-.avatar-wrap img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
-.nick{
-  font-size:13px;color:var(--text);margin-bottom:14px;font-weight:600;
-  cursor:pointer;padding:3px 10px;border-radius:10px;transition:.2s;
-  z-index:10;position:relative;
-}
-.nick:hover{background:rgba(128,128,128,0.1)}
-.nav-item{
-  width:calc(100% - 20px);display:flex;flex-direction:column;align-items:center;
-  padding:13px 0;margin:2px 10px;border-radius:14px;cursor:pointer;transition:.25s;gap:4px;font-size:13px;
-}
-.nav-item:hover{background:rgba(255,255,255,0.5)}
-.nav-item.active{
-  background:rgba(255,255,255,0.75);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:var(--shadow);
-}
-.nav-item .icon{font-size:22px;position:relative;z-index:1}
-.nav-item .label{color:var(--sub);font-size:11px;font-weight:500;position:relative;z-index:1}
-.nav-item.active .label{color:var(--accent);font-weight:700}
-.achievement-section{width:100%;padding:10px 14px;margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:5px}
-.achievement-title{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:2px;font-weight:600}
-.achievement-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
-.badge-icon{width:28px;height:28px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.badge-icon.earned{background:var(--accent);color:#fff;box-shadow:0 3px 12px rgba(0,0,0,0.15)}
-.badge-icon:hover{transform:scale(1.25)}
-.main{flex:1;padding:18px 26px;overflow-y:auto;position:relative;z-index:1;height:100vh;-webkit-overflow-scrolling:touch}
-.greeting{font-size:22px;color:var(--accent);margin-bottom:4px;font-weight:700;letter-spacing:0.5px}
-.greeting-sub{font-size:12px;color:var(--sub);margin-bottom:14px}
-.domains{display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.dom{
-  display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:30px;
-  background:var(--card);
-  box-shadow:var(--shadow);cursor:pointer;font-size:14px;transition:.25s;border:2px solid transparent;
-}
-.dom.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 20px rgba(0,0,0,0.12)}
-.dom.active span{color:#fff;font-weight:700}
-.module{display:none}
-.module.active{display:block}
-.card{
-  background:var(--card);
-  border-radius:var(--radius);padding:16px;margin-bottom:10px;
-  box-shadow:var(--shadow);transition:.25s;
-}
-.card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.06)}
-.btn{
-  background:var(--accent-light);color:var(--accent);border:none;border-radius:30px;
-  padding:8px 18px;font-size:13px;cursor:pointer;transition:.25s;white-space:nowrap;
-  font-weight:600;display:inline-flex;align-items:center;gap:4px;margin:2px;
-  min-height:36px;min-width:44px;
-}
-.btn:hover{opacity:.9;transform:translateY(-2px)}
-.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
-.btn-primary:hover{box-shadow:0 6px 24px rgba(0,0,0,0.2)}
-.btn2{background:#E8F5EC;color:var(--accent2)}
-.btn3{background:#FFF4EB;color:var(--accent3)}
-.btn-sm{padding:4px 12px;font-size:11px;min-height:28px;min-width:36px;font-weight:500}
-.fab{
-  position:fixed;right:34px;bottom:56px;width:56px;height:56px;border-radius:50%;
-  background:var(--accent);color:#fff;font-size:30px;border:none;
-  box-shadow:0 6px 24px rgba(0,0,0,0.2);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;z-index:10;transition:.3s;
-}
-.fab:hover{transform:scale(1.08)}
-.flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.checkbox{
-  width:30px;height:30px;border:2px solid var(--accent);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:.25s;font-size:16px;
-  color:transparent;
-}
-.checkbox.done{background:var(--accent);color:#fff}
-.modal{
-  display:none;position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  justify-content:center;align-items:center;z-index:100;
-}
-.modal.show{display:flex}
-.modal-box{
-  background:var(--card);border-radius:20px;padding:24px;width:90%;max-width:500px;
-  max-height:85vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);
-}
-.modal-box h3{color:var(--accent);margin-bottom:14px;font-size:18px}
-input,textarea,select{
-  border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:10px 14px;font-size:14px;
-  width:100%;margin:5px 0;font-family:inherit;
-  background:var(--card);color:var(--text);transition:.25s;
-}
-body.night input,body.night textarea,body.night select{border-color:rgba(255,255,255,0.1)}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
-textarea{min-height:80px;resize:vertical}
-.tag{display:inline-block;padding:4px 12px;border-radius:16px;font-size:11px;background:var(--accent-light);margin:2px;cursor:pointer;font-weight:500;transition:.2s}
-.tag.active{background:var(--accent);color:#fff}
-.badge{display:inline-block;background:var(--accent);color:#fff;border-radius:16px;padding:2px 9px;font-size:10px;margin-left:4px;font-weight:600}
-.subject-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.subject-tab{padding:5px 14px;border-radius:20px;background:var(--accent-light);color:var(--accent);font-size:12px;cursor:pointer;font-weight:500;transition:.2s;border:2px solid transparent}
-.subject-tab.active{background:var(--accent);color:#fff}
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
-.calendar-cell{aspect-ratio:1;background:var(--card);border-radius:10px;padding:6px;cursor:pointer;position:relative;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:12px;font-weight:600;transition:.2s;min-height:80px}
-.calendar-cell:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:scale(1.03)}
-.calendar-cell .day-num{position:absolute;top:6px;left:8px;z-index:2;font-size:13px;font-weight:700}
-.calendar-cell .thumb{width:100%;height:100%;object-fit:cover;border-radius:8px;position:absolute;top:0;left:0}
-.calendar-cell .icons-row{position:absolute;bottom:4px;right:4px;z-index:2;display:flex;gap:2px;font-size:13px;background:rgba(255,255,255,0.7);border-radius:10px;padding:2px 6px}
-/* 番茄钟 */
-.pomodoro-overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);
-  z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:20px;transition:opacity .4s; opacity:1;
-}
-.pomodoro-overlay.hidden{opacity:0;pointer-events:none}
-.pomodoro-timer{font-size:96px;font-weight:200;color:var(--accent);letter-spacing:6px}
-.countdown-badge{
-  background:var(--card);border-radius:24px;padding:10px 18px;font-size:14px;font-weight:700;
-  box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:8px;color:var(--accent);
-}
-.slider-row{display:flex;align-items:center;gap:8px;margin:4px 0}
-.slider-row input[type=range]{flex:1;accent-color:var(--accent)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>法硕督学 · 全能备考舱</title>
+  <style>
+    :root {
+      --bg: #F8F9FC;
+      --card: #FFFFFF;
+      --accent: #5B9BD5;
+      --accent2: #6BBF8A;
+      --accent3: #F0A060;
+      --accent-light: #EDF4FB;
+      --text: #3A3A3A;
+      --sub: #8A8A8A;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      --radius: 14px;
+      --nav-bg: rgba(255, 255, 255, 0.45);
+      --border: rgba(255, 255, 255, 0.5);
+      --nav-blur: 18px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg); color: var(--text); display: flex; height: 100vh;
+      overflow: hidden; transition: background .4s, color .4s;
+    }
+    body.night {
+      --bg: #1E1E1E; --card: #2A2A2A; --text: #E0E0E0; --sub: #A0A0A0;
+      --nav-bg: rgba(30, 30, 30, 0.55); --border: rgba(255, 255, 255, 0.06);
+      --accent-light: #3A4A5A; --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+    .app-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg); background-size: cover; background-position: center; background-repeat: no-repeat; transition: background-color .4s; }
+    .sidebar { width: 18%; min-width: 170px; max-width: 210px; background: var(--nav-bg); backdrop-filter: blur(var(--nav-blur)); -webkit-backdrop-filter: blur(var(--nav-blur)); display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-right: 1px solid var(--border); flex-shrink: 0; gap: 2px; overflow-y: auto; position: relative; z-index: 2; transition: background .3s; }
+    .avatar-wrap { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 6px; cursor: pointer; overflow: hidden; position: relative; background-size: cover; background-position: center; box-shadow: 0 4px 16px rgba(0,0,0,0.1); transition: .3s; border: 3px solid rgba(255,255,255,0.6); z-index: 10; }
+    .avatar-wrap:hover { transform: scale(1.06); }
+    .avatar-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .nick { font-size: 13px; color: var(--text); margin-bottom: 14px; font-weight: 600; cursor: pointer; padding: 3px 10px; border-radius: 10px; transition: .2s; z-index: 10; position: relative; }
+    .nick:hover { background: rgba(128, 128, 128, 0.1); }
+    .nav-item { width: calc(100% - 20px); display: flex; flex-direction: column; align-items: center; padding: 13px 0; margin: 2px 10px; border-radius: 14px; cursor: pointer; transition: .25s; gap: 4px; font-size: 13px; }
+    .nav-item:hover { background: rgba(255, 255, 255, 0.5); }
+    .nav-item.active { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow); }
+    .nav-item .icon { font-size: 22px; position: relative; z-index: 1; }
+    .nav-item .label { color: var(--sub); font-size: 11px; font-weight: 500; position: relative; z-index: 1; }
+    .nav-item.active .label { color: var(--accent); font-weight: 700; }
+    .achievement-section { width: 100%; padding: 10px 14px; margin-top: 6px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .achievement-title { font-size: 10px; color: var(--sub); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+    .achievement-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+    .badge-icon { width: 28px; height: 28px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; transition: .25s; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .badge-icon.earned { background: var(--accent); color: #fff; box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
+    .badge-icon:hover { transform: scale(1.25); }
+    .main { flex: 1; padding: 18px 26px; overflow-y: auto; position: relative; z-index: 1; height: 100vh; -webkit-overflow-scrolling: touch; }
+    .greeting { font-size: 22px; color: var(--accent); margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px; }
+    .greeting-sub { font-size: 12px; color: var(--sub); margin-bottom: 14px; }
+    .domains { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .dom { display: flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 30px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; font-size: 14px; transition: .25s; border: 2px solid transparent; }
+    .dom.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+    .dom.active span { color: #fff; font-weight: 700; }
+    .module { display: none; }
+    .module.active { display: block; }
+    .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); transition: .25s; }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .btn { background: var(--accent-light); color: var(--accent); border: none; border-radius: 30px; padding: 8px 18px; font-size: 13px; cursor: pointer; transition: .25s; white-space: nowrap; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin: 2px; min-height: 36px; min-width: 44px; }
+    .btn:hover { opacity: .9; transform: translateY(-2px); }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .btn-primary:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
+    .btn2 { background: #E8F5EC; color: var(--accent2); }
+    .btn3 { background: #FFF4EB; color: var(--accent3); }
+    .btn-sm { padding: 4px 12px; font-size: 11px; min-height: 28px; min-width: 36px; font-weight: 500; }
+    .fab { position: fixed; right: 34px; bottom: 56px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 30px; border: none; box-shadow: 0 6px 24px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: .3s; }
+    .fab:hover { transform: scale(1.08); }
+    .flex { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .checkbox { width: 30px; height: 30px; border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: .25s; font-size: 16px; color: transparent; }
+    .checkbox.done { background: var(--accent); color: #fff; }
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 100; }
+    .modal.show { display: flex; }
+    .modal-box { background: var(--card); border-radius: 20px; padding: 24px; width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 16px 48px rgba(0,0,0,0.2); }
+    .modal-box h3 { color: var(--accent); margin-bottom: 14px; font-size: 18px; }
+    input, textarea, select { border: 1.5px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 10px 14px; font-size: 14px; width: 100%; margin: 5px 0; font-family: inherit; background: var(--card); color: var(--text); transition: .25s; }
+    body.night input, body.night textarea, body.night select { border-color: rgba(255,255,255,0.1); }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+    textarea { min-height: 80px; resize: vertical; }
+    .tag { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 11px; background: var(--accent-light); margin: 2px; cursor: pointer; font-weight: 500; transition: .2s; }
+    .tag.active { background: var(--accent); color: #fff; }
+    .badge { display: inline-block; background: var(--accent); color: #fff; border-radius: 16px; padding: 2px 9px; font-size: 10px; margin-left: 4px; font-weight: 600; }
+    .subject-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .subject-tab { padding: 5px 14px; border-radius: 20px; background: var(--accent-light); color: var(--accent); font-size: 12px; cursor: pointer; font-weight: 500; transition: .2s; border: 2px solid transparent; }
+    .subject-tab.active { background: var(--accent); color: #fff; }
+    .heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
+    .heatmap-cell { aspect-ratio: 1; border-radius: 4px; background: rgba(0,0,0,0.05); min-width: 16px; transition: .2s; cursor: pointer; }
+    .heatmap-cell:hover { transform: scale(1.5); z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0; }
+    .stat-mini { text-align: center; padding: 12px; border-radius: 12px; background: var(--card); box-shadow: var(--shadow); }
+    .stat-mini .val { font-size: 24px; font-weight: 700; color: var(--accent); }
+    .stat-mini .lbl { font-size: 11px; color: var(--sub); margin-top: 2px; font-weight: 500; }
+    .word-table { width: 100%; border-collapse: collapse; }
+    .word-table td { padding: 10px 12px; vertical-align: middle; }
+    .word-table .en-col { font-size: 16px; font-weight: 600; text-align: left; width: 40%; }
+    .word-table .cn-col { font-size: 15px; text-align: left; width: 40%; color: var(--sub); }
+    .word-table .action-col { text-align: right; width: 20%; }
+    .word-table tr { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    body.night .word-table tr { border-bottom-color: rgba(255,255,255,0.06); }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 8px; }
+    .calendar-cell { aspect-ratio: 1; background: var(--card); border-radius: 10px; padding: 6px; cursor: pointer; position: relative; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 12px; font-weight: 600; transition: .2s; }
+    .calendar-cell:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: scale(1.03); }
+    .calendar-cell .day-num { position: absolute; top: 6px; left: 8px; z-index: 2; font-size: 13px; font-weight: 700; }
+    .calendar-cell .icons-row { position: absolute; bottom: 4px; right: 4px; z-index: 2; display: flex; gap: 2px; font-size: 13px; background: rgba(255,255,255,0.7); border-radius: 10px; padding: 2px 6px; }
+    .pomodoro-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity .4s; opacity: 1; }
+    .pomodoro-overlay.hidden { opacity: 0; pointer-events: none; }
+    .pomodoro-timer { font-size: 96px; font-weight: 200; color: var(--accent); letter-spacing: 6px; }
+    .countdown-badge { background: var(--card); border-radius: 24px; padding: 10px 18px; font-size: 14px; font-weight: 700; box-shadow: var(--shadow); display: inline-flex; align-items: center; gap: 8px; color: var(--accent); }
+    .slider-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+    .slider-row input[type=range] { flex: 1; accent-color: var(--accent); }
+  </style>
 </head>
 <body>
 <div class="app-bg" id="appBg"></div>
@@ -190,23 +132,15 @@ textarea{min-height:80px;resize:vertical}
 </div>
 <div class="modal" id="modal"></div>
 <div id="toastContainer"></div>
-<!-- 番茄钟浮层，默认隐藏 -->
 <div class="pomodoro-overlay hidden" id="pomodoroOverlay">
   <div class="pomodoro-timer" id="pomodoroTimer">25:00</div>
   <div class="flex" style="gap:10px"><button class="btn btn-sm" onclick="setPomodoro(25)">25分钟</button><button class="btn btn-sm" onclick="setPomodoro(45)">45分钟</button></div>
   <div class="flex" style="gap:10px"><button class="btn btn-primary" id="pomodoroStartBtn" onclick="togglePomodoro()">开始专注</button><button class="btn" onclick="closePomodoro()">退出</button></div>
-  <div class="ambient-select" style="display:flex;gap:8px;margin-top:8px">
-    <span style="font-size:13px;color:var(--sub)">背景音：</span>
-    <span class="ambient-btn active" onclick="setAmbient('none')">🔇 无</span>
-    <span class="ambient-btn" onclick="setAmbient('rain')">🌧️ 雨声</span>
-    <span class="ambient-btn" onclick="setAmbient('forest')">🌲 森林</span>
-    <span class="ambient-btn" onclick="setAmbient('cafe')">☕ 咖啡馆</span>
-  </div>
+  <div class="ambient-select" style="display:flex;gap:8px;margin-top:8px"><span style="font-size:13px;color:var(--sub)">背景音：</span><span class="ambient-btn active" onclick="setAmbient('none')">🔇 无</span><span class="ambient-btn" onclick="setAmbient('rain')">🌧️ 雨声</span><span class="ambient-btn" onclick="setAmbient('forest')">🌲 森林</span><span class="ambient-btn" onclick="setAmbient('cafe')">☕ 咖啡馆</span></div>
 </div>
 
 <script>
-// ==================== 数据核心 ====================
-const STORAGE_KEY = 'fashuo_final_v2';
+const STORAGE_KEY = 'fashuo_v20';
 let D = {
   domain:'major', nav:'daily', dateOffset:0,
   tasks:{}, templates:[], errors:{major:[],politics:[]},
@@ -219,47 +153,26 @@ let D = {
 };
 const PRESET_SUBJECTS = ['刑法','民法','法制史','宪法','法理学'];
 const CALENDAR_ICONS = ['📖','🎒','✈️','🍕','🏃','🎮','🎨','💼','🛒','❤️','🎵','💤','☕','💻','📝','🎂','🌧️','🌞','🚗','🏠'];
+
 const ACHIEVEMENTS = [
   {id:'checkin_1',icon:'👣',name:'脚印轻得像没来过',cond:()=>D.checkins.length>=1},
-  {id:'checkin_3',icon:'🦎',name:'三天打鱼两天晒网的鱼',cond:()=>D.checkins.length>=3},
   {id:'checkin_7',icon:'🕯️',name:'照亮了一周的书桌',cond:()=>D.checkins.length>=7},
-  {id:'checkin_14',icon:'🌛',name:'半个月亮爬上来',cond:()=>D.checkins.length>=14},
-  {id:'checkin_21',icon:'🧟',name:'习惯已养成，灵魂已出走',cond:()=>D.checkins.length>=21},
   {id:'checkin_30',icon:'🦅',name:'一个月没见过窗外',cond:()=>D.checkins.length>=30},
-  {id:'checkin_50',icon:'🐫',name:'沙漠里走了五十天',cond:()=>D.checkins.length>=50},
-  {id:'checkin_75',icon:'🦣',name:'猛犸象级别的坚持',cond:()=>D.checkins.length>=75},
   {id:'checkin_100',icon:'👽',name:'地球人已经无法阻止你',cond:()=>D.checkins.length>=100},
-  {id:'checkin_150',icon:'🐉',name:'传说级签到生物',cond:()=>D.checkins.length>=150},
-  {id:'checkin_200',icon:'🪐',name:'在知识的轨道上运行',cond:()=>D.checkins.length>=200},
-  {id:'checkin_365',icon:'🎇',name:'一个太阳年的坚持',cond:()=>D.checkins.length>=365},
   {id:'error_10',icon:'📝',name:'错题收集家',cond:()=>totalErrors()>=10},
   {id:'error_50',icon:'🗃️',name:'错题档案馆馆长',cond:()=>totalErrors()>=50},
-  {id:'error_100',icon:'🏗️',name:'在错误上建了座城市',cond:()=>totalErrors()>=100},
   {id:'acc_75',icon:'🎯',name:'错题克星',cond:()=>getAvgErrorAccuracy()>=75},
-  {id:'acc_85',icon:'🧙',name:'参考答案本参',cond:()=>getAvgErrorAccuracy()>=85},
   {id:'acc_95',icon:'🤖',name:'出题人看了都沉默',cond:()=>getAvgErrorAccuracy()>=95},
   {id:'recite_5',icon:'🌱',name:'刚发芽的记忆',cond:()=>totalRecites()>=5},
-  {id:'recite_15',icon:'🌿',name:'记忆藤蔓在蔓延',cond:()=>totalRecites()>=15},
   {id:'recite_50',icon:'🧠',name:'大脑开始冒烟',cond:()=>totalRecites()>=50},
-  {id:'recite_100',icon:'🏛️',name:'人形法典',cond:()=>totalRecites()>=100},
   {id:'recite_200',icon:'🐙',name:'每条触手都在背法条',cond:()=>totalRecites()>=200},
   {id:'pomo_5h',icon:'🍅',name:'番茄幼苗',cond:()=>pomoTotalHours()>=5},
-  {id:'pomo_30h',icon:'🍅🍅🍅',name:'番茄农场主',cond:()=>pomoTotalHours()>=30},
   {id:'pomo_100h',icon:'🕯️',name:'凿壁偷光践行者',cond:()=>pomoTotalHours()>=100},
-  {id:'pomo_200h',icon:'🏕️',name:'在书桌前扎营了',cond:()=>pomoTotalHours()>=200},
   {id:'word_30',icon:'🔤',name:'字母表入门',cond:()=>D.words.length>=30},
-  {id:'word_100',icon:'📖',name:'词典雏形',cond:()=>D.words.length>=100},
   {id:'word_500',icon:'🌐',name:'英语已渗透血液',cond:()=>D.words.length>=500},
-  {id:'word_1000',icon:'🗽',name:'可以直接润了',cond:()=>D.words.length>=1000},
-  {id:'cal_study_8',icon:'📖',name:'书本已长在手上',cond:()=>calWordCount('学习')>=8},
-  {id:'cal_sport_5',icon:'🏃',name:'间歇性自律',cond:()=>calWordCount('运动')>=5},
-  {id:'cal_coffee_10',icon:'☕',name:'血管里流的是咖啡因',cond:()=>calWordCount('咖啡')+calWordCount('奶茶')>=10},
-  {id:'cal_emo_3',icon:'💔',name:'法硕PTSD已确诊',cond:()=>calWordCount('emo')+calWordCount('崩溃')+calWordCount('想哭')>=3},
-  {id:'cal_library_8',icon:'🏛️',name:'图书管理员编外人员',cond:()=>calWordCount('图书馆')>=8},
-  {id:'night_owl',icon:'🦉',name:'深夜出没的学者',cond:()=>D.pomodoroHistory.some(h=>{const d=new Date(h.date);return d.getHours()<5})},
+  {id:'night_owl',icon:'🦉',name:'深夜出没的学者',cond:()=>D.pomodoroHistory.some(h=>new Date(h.date).getHours()<5)},
   {id:'nickname_3',icon:'🎭',name:'身份还在探索中',cond:()=>(D._nickChanges||0)>=3},
   {id:'export_5',icon:'🗄️',name:'缺乏安全感的仓鼠',cond:()=>(D._exportCount||0)>=5},
-  {id:'theme_5',icon:'🎨',name:'调色盘转世',cond:()=>(D._themeChanges||0)>=5},
 ];
 
 function totalErrors(){return (D.errors.major||[]).length+(D.errors.politics||[]).length}
@@ -270,7 +183,6 @@ function getAvgErrorAccuracy(){
   if(!a.length)return 0;return a.reduce((s,e)=>s+predictAcc(e),0)/a.length;
 }
 function predictAcc(e){if(!e.history||!e.history.length)return 50;const c=e.history.filter(h=>h.correct).length;return Math.round(c/e.history.length*100)}
-function calWordCount(word){let cnt=0;Object.values(D.calendar).forEach(d=>{if(d.note&&d.note.includes(word))cnt++;if(d.icons&&d.icons.includes(word))cnt++;});return cnt}
 function checkAchievements(){let u=false;ACHIEVEMENTS.forEach(a=>{if(!D.achievements.includes(a.id)&&a.cond()){D.achievements.push(a.id);u=true;toast(`🏅 解锁：${a.name}`);}});if(u)save()}
 
 function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(D))}
@@ -278,7 +190,6 @@ function load(){
   try{const d=JSON.parse(localStorage.getItem(STORAGE_KEY));if(d){D={...D,...d};
     if(!D.recites)D.recites={major:[],politics:[]};if(!D.calendar)D.calendar={};if(!D.checkins)D.checkins=[];
     if(!D.profile)D.profile={nickname:'小法硕',avatar:''};if(!D.achievements)D.achievements=[];
-    if(!D._nickChanges)D._nickChanges=0;if(!D._exportCount)D._exportCount=0;if(!D._themeChanges)D._themeChanges=0;
   }}catch(e){}
 }
 load();
@@ -300,7 +211,7 @@ function updateAppBg(){
 }
 function updateGreeting(){
   const h=new Date().getHours();let g='';
-  if(h<6)g='夜深了，注意休息 🌙';else if(h<9)g='早安 ☀️';else if(h<12)g='上午好 🌤️';else if(h<14)g='中午好 ☀️';else if(h<18)g='下午好 🌈';else if(h<22)g='晚上好 🌙';else g='夜深了 🌙';
+  if(h<6)g='夜深了 🌙';else if(h<9)g='早安 ☀️';else if(h<12)g='上午好 🌤️';else if(h<14)g='中午好 ☀️';else if(h<18)g='下午好 🌈';else if(h<22)g='晚上好 🌙';else g='夜深了 🌙';
   document.getElementById('greetingText').textContent=`👋 ${g}，${D.profile.nickname}`;
 }
 
@@ -308,21 +219,22 @@ function renderAll(){renderNav();renderDomains();showModule();updateAppBg();upda
 
 function renderNav(){
   const s=document.getElementById('sidebar');
-  let items=[{k:'daily',i:'📋',l:'每日计划'},{k:'error',i:'📝',l:'错题本'},{k:'knowledge',i:'📚',l:'知识点库'},{k:'recite',i:'💡',l:'背诵'},{k:'english',i:'🔤',l:'英语'},{k:'calendar',i:'📅',l:'日历'},{k:'settings',i:'⚙️',l:'设置'}];
+  // 英语不在导航栏，只在领域切换里
+  let items=[{k:'daily',i:'📋',l:'每日计划'},{k:'error',i:'📝',l:'错题本'},{k:'knowledge',i:'📚',l:'知识点库'},{k:'recite',i:'💡',l:'背诵'},{k:'calendar',i:'📅',l:'日历'},{k:'settings',i:'⚙️',l:'设置'}];
   const av=D.profile.avatar?`<img src="${D.profile.avatar}">`:'👤';
   const earned=ACHIEVEMENTS.filter(a=>D.achievements.includes(a.id));
   s.innerHTML=`<div class="avatar-wrap" onclick="uploadAvatar()" style="${D.profile.avatar?'background-image:url('+D.profile.avatar+');background-size:cover':''}">${D.profile.avatar?'':av}</div><div class="nick" onclick="editNickname()">${esc(D.profile.nickname)}</div>`;
-  items.forEach(it=>{const d=document.createElement('div');d.className='nav-item'+(D.nav===it.k?' active':'');d.innerHTML=`<span class="icon">${it.i}</span><span class="label">${it.l}</span>`;d.onclick=()=>{D.nav=it.k;if(it.k==='english')D.domain='english';renderAll()};s.appendChild(d)});
+  items.forEach(it=>{const d=document.createElement('div');d.className='nav-item'+(D.nav===it.k?' active':'');d.innerHTML=`<span class="icon">${it.i}</span><span class="label">${it.l}</span>`;d.onclick=()=>{D.nav=it.k;D.domain=it.k==='english'?'english':D.domain;renderAll()};s.appendChild(d)});
   if(earned.length){const sec=document.createElement('div');sec.className='achievement-section';sec.innerHTML=`<div class="achievement-title">🏆 ${earned.length}/${ACHIEVEMENTS.length}</div><div class="achievement-badges">${earned.map(a=>`<span class="badge-icon earned" title="${a.name}">${a.icon}</span>`).join('')}</div>`;s.appendChild(sec)}
 }
 
 function renderDomains(){
   const c=document.getElementById('domainTabs');
-  if(['calendar','english','settings'].includes(D.nav)){c.innerHTML='';return}
+  if(D.nav==='calendar'||D.nav==='settings'){c.innerHTML='';return}
   const ds=[{k:'major',i:'📖',l:'专业课'},{k:'politics',i:'🇨🇳',l:'政治'},{k:'english',i:'🌐',l:'英语'}];
   c.innerHTML=ds.map(d=>`<div class="dom${D.domain===d.k?' active':''}" onclick="switchDomain('${d.k}')"><span>${d.i}</span><span>${d.l}</span></div>`).join('');
 }
-function switchDomain(k){D.domain=k;if(k==='english')D.nav='english';renderAll()}
+function switchDomain(k){D.domain=k;D.nav=k==='english'?'english':'daily';renderAll()}
 function showModule(){
   document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
   const map={daily:renderDaily,error:renderError,knowledge:renderKnowledge,recite:renderRecite,english:renderEnglish,calendar:renderCalendar,settings:renderSettings};
@@ -341,7 +253,7 @@ function getSubjectOptions(currentVal,domain){
   return existing.map(s=>`<option value="${esc(s)}" ${currentVal===s?'selected':''}>${esc(s)}</option>`).join('')+`<option value="__custom__">✏️ 其他</option>`;
 }
 
-// ==================== 每日计划 ====================
+// ========== 每日计划 ==========
 function getDayTasks(ds){if(!D.tasks[ds])D.tasks[ds]=[];return D.tasks[ds]}
 function renderDaily(){
   const ds=todayStr();const tasks=getDayTasks(ds);const m=document.getElementById('dailyModule');
@@ -349,31 +261,26 @@ function renderDaily(){
   m.innerHTML=`
     <div class="flex-between"><div class="flex"><button class="btn btn-sm" onclick="shiftDate(-1)">◀</button><strong style="font-size:18px">${fmtDate(ds)}</strong><button class="btn btn-sm" onclick="shiftDate(1)">▶</button><button class="btn btn-sm" onclick="D.dateOffset=0;renderAll()">今天</button><span class="countdown-badge">📅 已签到 ${D.checkins.length} 天</span></div>
       <div class="flex"><button class="btn btn-sm btn-primary" onclick="openPomodoro()">🍅 专注</button><select id="statRange" onchange="updateStats()" style="width:auto;margin:0;font-size:11px;padding:5px 8px"><option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select><button class="btn btn-sm" onclick="toggleStats()">📊 统计</button></div></div>
-    <div id="taskListView">${renderTaskList(tasks,ds)}</div><div id="statsView" style="display:none"><div class="card">📈 热力图<div id="heatmap" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:6px"></div></div><div class="stats-row" id="statsNumbers"></div><div class="card">📋 复盘<div id="reportContent"></div><button class="btn btn-sm" onclick="addExamRecord()">+ 模考</button></div></div>
+    <div id="taskListView">${renderTaskList(tasks,ds)}</div><div id="statsView" style="display:none"><div class="card">📈 热力图<div class="heatmap-grid" id="heatmap"></div></div><div class="stats-row" id="statsNumbers"></div><div class="card">📋 复盘<div id="reportContent"></div><button class="btn btn-sm" onclick="addExamRecord()">+ 模考</button></div></div>
     <button class="fab" onclick="openTaskForm()">+</button>`;
   if(document.getElementById('statsView').style.display!=='none')updateStats()
 }
 function renderTaskList(tasks,ds){
   if(!tasks.length)return `<div class="card" style="text-align:center;color:var(--sub);padding:28px">✨ 今天还没有任务<br><small>点右下角 + 开始规划吧</small></div>`;
-  return tasks.map(t=>`<div class="card flex-between" style="opacity:${t.done?0.5:1}"><div class="flex"><div class="checkbox${t.done?' done':''}" onclick="toggleTask('${ds}','${t.id}')">${t.done?'✓':''}</div><div><strong>${esc(t.name)}</strong><br><small>${t.planTime||''}·${t.duration||30}分钟${t.repeatDays&&t.repeatDays.length?' 🔄':''}</small></div></div><div class="flex"><button class="btn btn-sm" onclick="editTask('${ds}','${t.id}')">✎</button><button class="btn btn-sm" onclick="deleteTask('${ds}','${t.id}')">✕</button></div></div>`).join('')
+  return tasks.map(t=>`<div class="card flex-between" style="opacity:${t.done?0.5:1}"><div class="flex"><div class="checkbox${t.done?' done':''}" onclick="toggleTask('${ds}','${t.id}')">${t.done?'✓':''}</div><div><strong>${esc(t.name)}</strong><br><small>${t.planTime||''}·${t.duration||30}分钟${t.repeatDays?' 🔄':''}</small></div></div><div class="flex"><button class="btn btn-sm" onclick="editTask('${ds}','${t.id}')">✎</button><button class="btn btn-sm" onclick="deleteTask('${ds}','${t.id}')">✕</button></div></div>`).join('')
 }
 function shiftDate(n){D.dateOffset+=n;renderAll()}
 function toggleTask(ds,id){const t=getDayTasks(ds).find(x=>x.id===id);if(t)t.done=!t.done;save();renderDaily()}
 function deleteTask(ds,id){D.tasks[ds]=getDayTasks(ds).filter(x=>x.id!==id);save();renderDaily()}
 function openTaskForm(ed,ei){
   let t=null;if(ed&&ei)t=getDayTasks(ed).find(x=>x.id===ei);
-  const rpt=t&&t.repeatDays?t.repeatDays.join(','):'';
-  openModal(`<div class="modal-box"><h3>${t?'编辑任务':'新建任务'}</h3><input id="tfName" placeholder="任务名称" value="${t?esc(t.name):''}"><div class="flex"><input id="tfTime" placeholder="时间" value="${t&&t.planTime?t.planTime:''}" style="flex:1"><input id="tfDuration" type="number" placeholder="分钟" value="${t?t.duration:30}" style="flex:1;max-width:100px"></div><label style="display:flex;align-items:center;gap:6px;margin:6px 0"><input type="checkbox" id="tfRepeat" ${t&&t.repeatDays?'checked':''}> 每日重复</label><div id="repeatDaysPicker" style="display:${t&&t.repeatDays?'block':'none'}">${['周一','周二','周三','周四','周五','周六','周日'].map((d,i)=>`<span class="tag${rpt.includes(String(i+1))?' active':''}" id="rd${i+1}" onclick="this.classList.toggle('active')">${d}</span>`).join('')}</div><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTask('${ed||''}','${ei||''}')">保存</button></div></div>`);
-  document.getElementById('tfRepeat').onchange=function(){document.getElementById('repeatDaysPicker').style.display=this.checked?'block':'none'};
+  openModal(`<div class="modal-box"><h3>${t?'编辑任务':'新建任务'}</h3><input id="tfName" placeholder="任务名称" value="${t?esc(t.name):''}"><div class="flex"><input id="tfTime" placeholder="时间" value="${t&&t.planTime?t.planTime:''}" style="flex:1"><input id="tfDuration" type="number" placeholder="分钟" value="${t?t.duration:30}" style="flex:1;max-width:100px"></div><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTask('${ed||''}','${ei||''}')">保存</button></div></div>`);
 }
 function saveTask(ed,ei){
   const name=document.getElementById('tfName').value.trim();if(!name)return toast('请输入任务名称');
   const pt=document.getElementById('tfTime').value,dur=parseInt(document.getElementById('tfDuration').value)||30;
-  const rpt=document.getElementById('tfRepeat')?.checked;let rd=null;
-  if(rpt){rd=[];for(let i=1;i<=7;i++){const el=document.getElementById('rd'+i);if(el&&el.classList.contains('active'))rd.push(String(i))}if(!rd.length)rd=['1','2','3','4','5','6','7']}
-  if(ed&&ei){const t=getDayTasks(ed).find(x=>x.id===ei);if(t)Object.assign(t,{name,planTime:pt,duration:dur,repeatDays:rd})}
-  else{getDayTasks(todayStr()).push({id:Date.now().toString(),name,planTime:pt,duration:dur,done:false,repeatDays:rd})}
-  if(rd){D.templates.push({id:Date.now().toString(),name,planTime:pt,duration:dur,repeatDays:rd})}
+  if(ed&&ei){const t=getDayTasks(ed).find(x=>x.id===ei);if(t)Object.assign(t,{name,planTime:pt,duration:dur})}
+  else{getDayTasks(todayStr()).push({id:Date.now().toString(),name,planTime:pt,duration:dur,done:false})}
   save();closeModal();renderDaily()
 }
 function editTask(ds,id){openTaskForm(ds,id)}
@@ -386,13 +293,13 @@ function updateStats(){
   else{const all=Object.keys(D.tasks).sort();if(all.length){const s=new Date(all[0]),e=new Date(all[all.length-1]);for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))days.push(d.toISOString().split('T')[0])}}
   let tm=0,cp=0,tt=0;const hd={};
   days.forEach(ds=>{const arr=D.tasks[ds]||[];let dm=0,dd=0;arr.forEach(t=>{dm+=t.duration||30;if(t.done)dd++;tt++});tm+=dm;cp+=dd;hd[ds]={min:dm,done:dd,total:arr.length}});
-  const hg=document.getElementById('heatmap');if(hg){let h='';days.forEach(ds=>{const hh=hd[ds]||{min:0,done:0,total:0};const r=hh.total?hh.done/hh.total:0;let c='#eee';if(hh.total>0){if(r>=0.8)c=D.settings.accentColor;else if(r>=0.5)c=D.settings.accentColor+'99';else if(r>0)c=D.settings.accentColor+'55';else c=D.settings.accentColor+'22'}h+=`<div style="aspect-ratio:1;border-radius:4px;background:${c}" title="${ds}:${hh.done}/${hh.total}"></div>`});hg.innerHTML=h}
+  const hg=document.getElementById('heatmap');if(hg){let h='';days.forEach(ds=>{const hh=hd[ds]||{min:0,done:0,total:0};const r=hh.total?hh.done/hh.total:0;let c='#eee';if(hh.total>0){if(r>=0.8)c=D.settings.accentColor;else if(r>=0.5)c=D.settings.accentColor+'99';else if(r>0)c=D.settings.accentColor+'55';else c=D.settings.accentColor+'22'}h+=`<div class="heatmap-cell" style="background:${c}" title="${ds}:${hh.done}/${hh.total}"></div>`});hg.innerHTML=h}
   const sn=document.getElementById('statsNumbers');if(sn)sn.innerHTML=`<div class="stat-mini"><div class="val">${(tm/60).toFixed(1)}h</div><div class="lbl">总专注</div></div><div class="stat-mini"><div class="val">${days.length?(tm/60/days.length).toFixed(1):'0'}h</div><div class="lbl">日均</div></div><div class="stat-mini"><div class="val">${cp}</div><div class="lbl">已完成</div></div><div class="stat-mini"><div class="val">${tt?Math.round(cp/tt*100):0}%</div><div class="lbl">完成率</div></div>`;
   document.getElementById('reportContent').innerHTML=`<p>📅${days.length}天|⏱${(tm/60).toFixed(1)}h|✅${tt?Math.round(cp/tt*100):0}%</p>`
 }
 function addExamRecord(){const s=prompt('科目：');if(!s)return;const sc=parseFloat(prompt('分数：'));if(isNaN(sc))return;D.exams.push({date:todayStr(),subject:s,score:sc});save();updateStats();toast('成绩已记录')}
 
-// ==================== 番茄钟 ====================
+// ========== 番茄钟 ==========
 let pomodoroInterval=null,pomodoroSeconds=25*60,pomodoroRunning=false,ambientAudio=null;
 function openPomodoro(){document.getElementById('pomodoroOverlay').classList.remove('hidden');pomodoroSeconds=25*60;updateTimerDisplay()}
 function closePomodoro(){if(pomodoroRunning)return;stopAmbient();document.getElementById('pomodoroOverlay').classList.add('hidden')}
@@ -402,17 +309,10 @@ function startPomodoro(){pomodoroRunning=true;document.getElementById('pomodoroS
 function pausePomodoro(){pomodoroRunning=false;clearInterval(pomodoroInterval);document.getElementById('pomodoroStartBtn').textContent='继续'}
 function updateTimerDisplay(){const m=Math.floor(pomodoroSeconds/60),s=pomodoroSeconds%60;document.getElementById('pomodoroTimer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
 function finishPomodoro(){clearInterval(pomodoroInterval);pomodoroRunning=false;document.getElementById('pomodoroStartBtn').textContent='开始专注';pomodoroSeconds=25*60;updateTimerDisplay();const ds=todayStr();getDayTasks(ds).push({id:Date.now().toString(),name:'🍅专注',planTime:'',duration:25,done:true});D.pomodoroHistory.push({date:ds,duration:25});save();renderDaily();stopAmbient();closePomodoro();toast('🍅 专注完成！+25分钟')}
-function setAmbient(type){
-  stopAmbient();document.querySelectorAll('.ambient-btn').forEach(b=>b.classList.remove('active'));
-  if(type==='none')return;
-  document.querySelector(`.ambient-btn[onclick*="${type}"]`)?.classList.add('active');
-  try{const ctx=new(window.AudioContext||window.webkitAudioContext)(),buf=ctx.createBuffer(1,2*ctx.sampleRate,ctx.sampleRate),d=buf.getChannelData(0);
-    for(let i=0;i<d.length;i++){if(type==='rain'){d[i]=Math.random()*2-1;if(i%3===0)d[i]*=0.3}else if(type==='forest'){d[i]=(Math.random()*2-1)*0.5;if(Math.random()<0.02)d[i]*=2}else{d[i]=(Math.random()*2-1)*0.7;if(Math.random()<0.01)d[i]*=3}}
-    const s=ctx.createBufferSource();s.buffer=buf;s.loop=true;const g=ctx.createGain();g.gain.value=0.3;s.connect(g);g.connect(ctx.destination);s.start();ambientAudio={ctx,source:s,gain:g}}catch(e){}
-}
+function setAmbient(type){stopAmbient();document.querySelectorAll('.ambient-btn').forEach(b=>b.classList.remove('active'));if(type!=='none')document.querySelector(`.ambient-btn[onclick*="${type}"]`)?.classList.add('active');}
 function stopAmbient(){if(ambientAudio){try{ambientAudio.source.stop()}catch(e){}try{ambientAudio.ctx.close()}catch(e){}ambientAudio=null}}
 
-// ==================== 错题本 ====================
+// ========== 错题本 ==========
 let errorSubjectFilter='all';
 function renderError(){
   const m=document.getElementById('errorModule');const list=D.errors[D.domain]||[];const allSubjects=[...new Set(list.map(e=>e.subject))];
@@ -430,19 +330,14 @@ function renderErrorList(){
 }
 function openErrorForm(ei){
   let e=null;if(ei!==undefined)e=D.errors[D.domain][ei];
-  openModal(`<div class="modal-box"><h3>${e?'编辑':'新增'}错题</h3><select id="errSubject" onchange="onErrSubChange()">${getSubjectOptions(e?e.subject:'',D.domain)}</select><input id="errSubjectCustom" placeholder="自定义科目" style="display:none" value="${e&&!PRESET_SUBJECTS.includes(e.subject)?esc(e.subject):''}"><input id="errChapter" placeholder="章节" value="${e?esc(e.chapter):''}"><select id="errType" onchange="toggleErrType()"><option value="客观" ${e&&e.type==='客观'?'selected':''}>客观题</option><option value="主观" ${e&&e.type==='主观'?'selected':''}>主观题</option></select><textarea id="errQuestion" placeholder="题目内容" style="min-height:100px">${e?esc(e.question):''}</textarea><input type="file" accept="image/*" id="errImage" onchange="handleErrImage()"><small>上传截图</small><div id="errOptsContainer">${e&&e.type==='客观'?renderOptsEditor(e):''}</div><input id="errAnswer" placeholder="正确答案" value="${e?esc(e.answer):''}"><textarea id="errNote" placeholder="知识点笔记" style="min-height:80px">${e&&e.note?esc(e.note):''}</textarea><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveError(${ei!==undefined?ei:-1})">保存</button></div></div>`);
-  if(e&&!PRESET_SUBJECTS.includes(e.subject)){document.getElementById('errSubject').value='__custom__';document.getElementById('errSubjectCustom').style.display='block'}
+  openModal(`<div class="modal-box"><h3>${e?'编辑':'新增'}错题</h3><select id="errSubject" onchange="onErrSubChange()">${getSubjectOptions(e?e.subject:'',D.domain)}</select><input id="errSubjectCustom" placeholder="自定义科目" style="display:none" value="${e&&!PRESET_SUBJECTS.includes(e.subject)?esc(e.subject):''}"><input id="errChapter" placeholder="章节" value="${e?esc(e.chapter):''}"><select id="errType"><option value="客观">客观题</option><option value="主观">主观题</option></select><textarea id="errQuestion" placeholder="题目内容" style="min-height:100px">${e?esc(e.question):''}</textarea><input id="errAnswer" placeholder="正确答案" value="${e?esc(e.answer):''}"><textarea id="errNote" placeholder="知识点笔记" style="min-height:80px">${e&&e.note?esc(e.note):''}</textarea><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveError(${ei!==undefined?ei:-1})">保存</button></div></div>`);
 }
 function onErrSubChange(){const s=document.getElementById('errSubject'),c=document.getElementById('errSubjectCustom');c.style.display=s.value==='__custom__'?'block':'none'}
-function renderOptsEditor(e){const opts=e?e.options:[{key:'A',text:''},{key:'B',text:''},{key:'C',text:''},{key:'D',text:''}];return`<div><strong>选项</strong>${opts.map(o=>`<div class="flex"><span style="width:20px">${o.key}</span><input value="${esc(o.text)}" data-key="${o.key}" class="optInput" style="flex:1"></div>`).join('')}<button class="btn btn-sm" onclick="addOption()">+选项</button></div>`}
-function toggleErrType(){const t=document.getElementById('errType')?.value,c=document.getElementById('errOptsContainer');if(c)c.innerHTML=t==='客观'?renderOptsEditor({options:[{key:'A',text:''},{key:'B',text:''},{key:'C',text:''},{key:'D',text:''}]}):''}
-function addOption(){const c=document.getElementById('errOptsContainer'),keys=[...c.querySelectorAll('.flex span')].map(s=>s.textContent),nk=String.fromCharCode(65+keys.length);c.insertBefore(document.createElement('div'),c.lastElementChild).outerHTML=`<div class="flex"><span style="width:20px">${nk}</span><input data-key="${nk}" class="optInput" style="flex:1"></div>`}
-function handleErrImage(){const f=document.getElementById('errImage')?.files[0];if(f){const r=new FileReader();r.onload=function(){document.getElementById('errQuestion').value+='\n[图片已附加]'};r.readAsDataURL(f)}}
 function saveError(ei){
   const sel=document.getElementById('errSubject'),subject=sel.value==='__custom__'?document.getElementById('errSubjectCustom').value.trim():sel.value;
   if(!subject)return toast('请选择科目');
   const ch=document.getElementById('errChapter').value.trim(),ty=document.getElementById('errType').value,q=document.getElementById('errQuestion').value.trim(),a=document.getElementById('errAnswer').value.trim(),n=document.getElementById('errNote').value.trim();
-  if(!q)return toast('题目必填');let opts=[];if(ty==='客观'){document.querySelectorAll('.optInput').forEach(inp=>opts.push({key:inp.dataset.key,text:inp.value}))}
+  if(!q)return toast('题目必填');let opts=[];
   const err={id:Date.now().toString(),subject,chapter:ch,type:ty,question:q,answer:a,options:opts,note:n,history:[]};
   if(ei>=0){const old=D.errors[D.domain][ei];err.history=old.history||[];err.id=old.id;D.errors[D.domain][ei]=err}else{D.errors[D.domain].push(err)}
   if(n){D.knowledge[D.domain].push({id:Date.now().toString(),subject,chapter:ch,content:n,source:'error',type:'normal'})}save();closeModal();renderError()
@@ -451,11 +346,11 @@ function editError(i){openErrorForm(i)}
 function deleteError(i){D.errors[D.domain].splice(i,1);save();renderError()}
 function reviewError(i){
   const e=D.errors[D.domain][i];
-  openModal(`<div class="modal-box"><h3>回顾错题</h3><p><strong>${esc(e.subject)}·${esc(e.chapter)}</strong>[${e.type}]</p><p>${esc(e.question)}</p>${e.type==='客观'&&e.options?`<div>${e.options.map(o=>`<label class="tag"><input type="radio" name="reviewOpt" value="${esc(o.key)}">${o.key}.${o.text}</label>`).join('')}</div>`:`<textarea id="reviewSubj" placeholder="你的答案"></textarea>`}<div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitReview(${i})">提交</button></div><div id="reviewResult" style="margin-top:8px;display:none"></div></div>`);
+  openModal(`<div class="modal-box"><h3>回顾错题</h3><p><strong>${esc(e.subject)}·${esc(e.chapter)}</strong></p><p>${esc(e.question)}</p><textarea id="reviewSubj" placeholder="你的答案"></textarea><div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitReview(${i})">提交</button></div><div id="reviewResult" style="margin-top:8px;display:none"></div></div>`);
 }
-function submitReview(i){const e=D.errors[D.domain][i];let u='';if(e.type==='客观'){const sel=document.querySelector('input[name="reviewOpt"]:checked');u=sel?sel.value:''}else{u=document.getElementById('reviewSubj')?.value||''}const ok=u.trim()===e.answer.trim();e.history.push({date:new Date().toISOString(),correct:ok});const rr=document.getElementById('reviewResult');rr.style.display='block';rr.innerHTML=ok?'<span style="color:var(--accent2)">✅正确</span>':'<span style="color:#D05555">❌答案：'+esc(e.answer)+'</span>';save()}
+function submitReview(i){const e=D.errors[D.domain][i];let u=document.getElementById('reviewSubj')?.value||'';const ok=u.trim()===e.answer.trim();e.history.push({date:new Date().toISOString(),correct:ok});const rr=document.getElementById('reviewResult');rr.style.display='block';rr.innerHTML=ok?'<span style="color:var(--accent2)">✅正确</span>':'<span style="color:#D05555">❌答案：'+esc(e.answer)+'</span>';save()}
 
-// ==================== 知识点库 ====================
+// ========== 知识点库 ==========
 let knowledgeSubjectFilter='all';
 function renderKnowledge(){
   const m=document.getElementById('knowledgeModule');const list=D.knowledge[D.domain]||[];const allSubjects=[...new Set(list.map(k=>k.subject))];
@@ -472,13 +367,10 @@ function renderKnowledgeList(){
 }
 function openKnowledgeForm(ei){
   let k=null;if(ei!==undefined)k=D.knowledge[D.domain][ei];
-  openModal(`<div class="modal-box"><h3>${k?'编辑':'添加'}知识点</h3><select id="kSubject" onchange="onKSubChange()">${getSubjectOptions(k?k.subject:'',D.domain)}</select><input id="kSubjectCustom" placeholder="自定义科目" style="display:none" value="${k&&!PRESET_SUBJECTS.includes(k.subject)?esc(k.subject):''}"><input id="kChapter" placeholder="章节" value="${k?esc(k.chapter):''}"><textarea id="kContent" placeholder="内容" style="min-height:120px">${k?esc(k.content):''}</textarea><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveKnowledge(${ei!==undefined?ei:-1})">保存</button></div></div>`);
-  if(k&&!PRESET_SUBJECTS.includes(k.subject)){document.getElementById('kSubject').value='__custom__';document.getElementById('kSubjectCustom').style.display='block'}
+  openModal(`<div class="modal-box"><h3>${k?'编辑':'添加'}知识点</h3><select id="kSubject">${getSubjectOptions(k?k.subject:'',D.domain)}</select><input id="kChapter" placeholder="章节" value="${k?esc(k.chapter):''}"><textarea id="kContent" placeholder="内容" style="min-height:120px">${k?esc(k.content):''}</textarea><div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveKnowledge(${ei!==undefined?ei:-1})">保存</button></div></div>`);
 }
-function onKSubChange(){const s=document.getElementById('kSubject'),c=document.getElementById('kSubjectCustom');c.style.display=s.value==='__custom__'?'block':'none'}
 function saveKnowledge(ei){
-  const sel=document.getElementById('kSubject'),subject=sel.value==='__custom__'?document.getElementById('kSubjectCustom').value.trim():sel.value;
-  if(!subject)return toast('请选择科目');
+  const sel=document.getElementById('kSubject'),subject=sel.value;if(!subject)return toast('请选择科目');
   const ch=document.getElementById('kChapter').value.trim(),co=document.getElementById('kContent').value.trim();if(!co)return toast('内容必填');
   const kn={id:Date.now().toString(),subject,chapter:ch,content:co,source:'manual',type:'normal'};
   if(ei>=0){kn.id=D.knowledge[D.domain][ei].id;D.knowledge[D.domain][ei]=kn}else{D.knowledge[D.domain].push(kn)}save();closeModal();renderKnowledge()
@@ -487,11 +379,11 @@ function editKnowledge(i){openKnowledgeForm(i)}
 function deleteKnowledge(i){D.knowledge[D.domain].splice(i,1);save();renderKnowledge()}
 function addKnowledgeToRecite(i){const k=D.knowledge[D.domain][i];if(!k)return;D.recites[D.domain].push({id:Date.now().toString(),subject:k.subject,chapter:k.chapter,content:k.content,stage:0,nextReview:todayStr()});save();toast('已加入背诵')}
 
-// ==================== 背诵 ====================
+// ========== 背诵 ==========
 let reciteSubjectFilter='all';
 function renderRecite(){
   const m=document.getElementById('reciteModule');const all=D.recites[D.domain]||[];const allSubjects=[...new Set(all.map(k=>k.subject))];
-  m.innerHTML=`<h3>💡背诵管理·${domLabel()}<span class="badge">${all.length}</span></h3><div class="subject-tabs" id="reciteSubjectTabs"></div><div class="flex" style="margin-bottom:8px"><input class="inline-input" id="reciteSearch" placeholder="🔍搜索" oninput="renderRecite()" style="flex:1;min-width:200px"><select id="reciteSubject" class="inline-input" style="width:auto"><option value="">科目</option>${getSubjectOptions('',D.domain).replace('__custom__','').replace('<option value="__custom__">✏️ 其他</option>','')}</select><input class="inline-input" id="reciteChapter" placeholder="章节"><input class="inline-input" id="reciteContent" placeholder="内容" style="flex:2"><button class="btn btn-primary btn-sm" onclick="addReciteItem()">+添加</button></div>`;
+  m.innerHTML=`<h3>💡背诵管理·${domLabel()}<span class="badge">${all.length}</span></h3><div class="subject-tabs" id="reciteSubjectTabs"></div><div class="flex" style="margin-bottom:8px"><input class="inline-input" id="reciteSearch" placeholder="🔍搜索" oninput="renderRecite()" style="flex:1;min-width:200px"><select id="reciteSubject" class="inline-input" style="width:auto"><option value="">科目</option>${getSubjectOptions('',D.domain)}</select><input class="inline-input" id="reciteChapter" placeholder="章节"><input class="inline-input" id="reciteContent" placeholder="内容" style="flex:2"><button class="btn btn-primary btn-sm" onclick="addReciteItem()">+添加</button></div>`;
   renderSubjectTabs('reciteSubjectTabs',allSubjects,reciteSubjectFilter,(v)=>{reciteSubjectFilter=v;renderRecite()});
   const q=(document.getElementById('reciteSearch')?.value||'').toLowerCase();let filtered=all;
   if(reciteSubjectFilter!=='all')filtered=filtered.filter(k=>k.subject===reciteSubjectFilter);
@@ -512,7 +404,7 @@ function renderSubjectTabs(containerId,subjects,currentFilter,callback){
   container.innerHTML=tabs.map(s=>{const label=s==='all'?'全部':s,active=currentFilter===s;return`<span class="subject-tab${active?' active':''}" onclick="event.stopPropagation();(${callback.toString()})('${s.replace(/'/g,"\\'")}')">${label}</span>`}).join('');
 }
 
-// ==================== 英语 ====================
+// ========== 英语 ==========
 let wordView='all';
 function renderEnglish(){
   D.domain='english';const m=document.getElementById('englishModule');
@@ -535,7 +427,7 @@ function toggleWordView(v){wordView=v;renderEnglish()}
 function startWordQuiz(){if(D.words.length<4)return toast('至少4个');const p=[...D.words].sort(()=>Math.random()-0.5),c=p[0],o=[c,...p.slice(1,4)].sort(()=>Math.random()-0.5);openModal(`<div class="modal-box"><h3>选择正确释义</h3><h2>${esc(c.en)}</h2>${o.map(x=>`<button class="btn" style="display:block;width:100%;margin:4px 0" onclick="checkQuiz('${esc(x.cn)}','${esc(c.cn)}','${esc(c.en)}')">${esc(x.cn)}</button>`).join('')}<div style="text-align:right"><button class="btn" onclick="closeModal()">关闭</button></div></div>`)}
 function checkQuiz(ch,co,en){const ok=ch===co;toast(ok?'✅正确':'❌答案：'+co);const w=D.words.find(x=>x.en===en);if(w){const iv=[1,2,4,7,15,30,60,120];if(ok)w.stage=Math.min((w.stage||0)+1,iv.length-1);else w.stage=0;w.nextReview=new Date(Date.now()+iv[w.stage]*86400000).toISOString().split('T')[0];save()}closeModal()}
 
-// ==================== 日历 ====================
+// ========== 日历 ==========
 let calYear,calMonth,selectedCalIcons=[];
 function renderCalendar(){
   const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth()+1;
@@ -551,7 +443,9 @@ function renderCalendarMonth(){
     if((i===0&&j<firstDay)||day>daysInMonth){html+='<div class="calendar-cell" style="background:transparent;box-shadow:none"></div>';continue}
     const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`,entry=D.calendar[ds]||{images:[],icons:[],note:''};
     const img=entry.images&&entry.images.length>0?entry.images[0]:'',icons=(entry.icons||[]).slice(0,3);
-    html+=`<div class="calendar-cell" style="${img?`background-image:url(${img});background-size:cover;background-position:center;`:''}${ds===today?'border:2px solid var(--accent);':''}" onclick="openDayDetail('${ds}')"><span class="day-num" style="${img?'color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5)':''}">${day}</span>${img?'':`<div class="icons-row">${icons.join('')||'📅'}</div>`}</div>`;
+    // 有图片就显示图片，图标在右下角；无图片无图标则空白
+    const bgStyle=img?`background-image:url(${img});background-size:cover;background-position:center;`:'';
+    html+=`<div class="calendar-cell" style="${bgStyle}${ds===today?'border:2px solid var(--accent);':''}" onclick="openDayDetail('${ds}')"><span class="day-num" style="${img?'color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5)':''}">${day}</span>${icons.length>0?`<div class="icons-row">${icons.join('')}</div>`:''}</div>`;
     day++;
   }
   html+='</div>';m.innerHTML=html;
@@ -560,8 +454,8 @@ function changeCalMonth(d){if(d===1){if(calMonth===12){calYear++;calMonth=1}else
 function openDayDetail(ds){
   const entry=D.calendar[ds]||{images:[],icons:[],note:''};selectedCalIcons=[...(entry.icons||[])];
   let imgHtml=entry.images.map((img,i)=>`<div style="position:relative;display:inline-block;margin:4px"><img src="${img}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer" onclick="previewImage('${img}')"><button class="btn btn-sm" style="position:absolute;top:2px;right:2px" onclick="deleteCalImg('${ds}',${i})">✕</button></div>`).join('');
-  if(!imgHtml)imgHtml='<p style="color:var(--sub)">暂无图片（可选传）</p>';
-  openModal(`<div class="modal-box" style="max-width:600px"><h3>${fmtDate(ds)}</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${imgHtml}</div><hr><input type="file" accept="image/*" onchange="uploadCalImg('${ds}',this)" multiple><div style="margin-top:8px"><strong>标签：</strong>${CALENDAR_ICONS.map(ic=>`<span class="tag${selectedCalIcons.includes(ic)?' active':''}" onclick="toggleCalIcon('${ic}')">${ic}</span>`).join('')}</div><input id="calNote" placeholder="备注（可选）" value="${esc(entry.note||'')}"><button class="btn btn-primary" onclick="saveCalDay('${ds}')">保存</button><button class="btn" onclick="closeModal()">关闭</button></div>`);
+  if(!imgHtml)imgHtml='<p style="color:var(--sub)">暂无图片</p>';
+  openModal(`<div class="modal-box" style="max-width:600px"><h3>${fmtDate(ds)}</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${imgHtml}</div><hr><input type="file" accept="image/*" onchange="uploadCalImg('${ds}',this)" multiple><div style="margin-top:8px"><strong>标签：</strong>${CALENDAR_ICONS.map(ic=>`<span class="tag${selectedCalIcons.includes(ic)?' active':''}" onclick="toggleCalIcon('${ic}')">${ic}</span>`).join('')}</div><input id="calNote" placeholder="备注" value="${esc(entry.note||'')}"><button class="btn btn-primary" onclick="saveCalDay('${ds}')">保存</button><button class="btn" onclick="closeModal()">关闭</button></div>`);
 }
 function toggleCalIcon(ic){const idx=selectedCalIcons.indexOf(ic);if(idx>=0)selectedCalIcons.splice(idx,1);else selectedCalIcons.push(ic);document.querySelectorAll('.modal-box .tag').forEach(t=>{if(t.textContent===ic)t.classList.toggle('active',selectedCalIcons.includes(ic))})}
 function uploadCalImg(ds,input){const files=input.files;if(!files.length)return;Array.from(files).forEach(f=>{const r=new FileReader();r.onload=function(e){if(!D.calendar[ds])D.calendar[ds]={images:[],icons:[],note:''};D.calendar[ds].images.push(e.target.result);save();closeModal();openDayDetail(ds)};r.readAsDataURL(f)})}
@@ -569,7 +463,7 @@ function saveCalDay(ds){if(!D.calendar[ds])D.calendar[ds]={images:[],icons:[],no
 function deleteCalImg(ds,i){D.calendar[ds].images.splice(i,1);save();closeModal();renderCalendarMonth()}
 function previewImage(src){openModal(`<div class="modal-box" style="text-align:center"><img src="${src}" style="max-width:100%;max-height:70vh;border-radius:10px"><br><button class="btn" onclick="closeModal()">关闭</button></div>`)}
 
-// ==================== 设置 ====================
+// ========== 设置 ==========
 function renderSettings(){
   const m=document.getElementById('settingsModule'),presets=['#5B9BD5','#6BBF8A','#F0A060','#9B7EC4','#D05555','#5BA0A0','#E08090','#C8956C','#8A8A8A','#4A90D9'];
   m.innerHTML=`<div class="card"><h3>🎨主题取色</h3><div class="flex" style="flex-wrap:wrap;gap:6px">${presets.map(c=>`<span style="width:32px;height:32px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${D.settings.accentColor===c?'var(--text)':'transparent'}" onclick="pickColor('${c}')"></span>`).join('')}<input type="color" value="${D.settings.accentColor}" onchange="pickColor(this.value)" style="width:40px;height:32px"></div><div class="slider-row"><span>导航透明度</span><input type="range" min="0" max="100" value="${Math.round(D.settings.navOpacity*100)}" onchange="D.settings.navOpacity=this.value/100;applyNavStyle();save()"></div><div class="slider-row"><span>毛玻璃强度</span><input type="range" min="0" max="40" value="${D.settings.navBlur}" onchange="D.settings.navBlur=parseInt(this.value);applyNavStyle();save()"></div><button class="btn btn-sm" onclick="toggleNight()">${D.settings.nightMode?'☀️白天':'🌙夜晚'}模式</button></div><div class="card"><h3>🖼背景图</h3><input type="file" accept="image/*" onchange="uploadBg(this)"><input type="text" id="bgUrl" placeholder="图片URL" value="${D.settings.bgImage||''}"><button class="btn btn-sm" onclick="applyBgUrl()">应用</button><button class="btn btn-sm" onclick="removeBg()">清除</button></div><div class="card"><h3>📦数据</h3><button class="btn btn-sm" onclick="exportAll()">导出JSON</button><button class="btn btn-sm" onclick="importAll()">导入</button></div><div class="card"><h3>📅考研日期</h3><input type="date" id="examDateInput" value="${D.settings.examDate||''}" onchange="D.settings.examDate=this.value;save();renderAll()"></div>`;
@@ -582,7 +476,6 @@ function removeBg(){D.settings.bgImage='';updateAppBg();save()}
 function exportAll(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='法硕督学备份.json';a.click();D._exportCount=(D._exportCount||0)+1;save();toast('导出成功')}
 function importAll(){const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=function(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);D={...D,...d};save();renderAll();toast('导入成功')}catch(ex){toast('格式错误')}};r.readAsText(f)};i.click()}
 
-// ==================== 初始化 ====================
 function init(){
   document.documentElement.style.setProperty('--accent',D.settings.accentColor||'#5B9BD5');
   if(D.settings.nightMode)document.body.classList.add('night');
@@ -593,7 +486,6 @@ function init(){
   renderAll();
 }
 init();
-window.addEventListener('beforeunload',save);
 </script>
 </body>
 </html>

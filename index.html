@@ -48,12 +48,14 @@ body.night{
   background-size:cover;background-position:center;
   box-shadow:0 4px 16px rgba(0,0,0,0.1);
   transition:.3s;border:3px solid rgba(255,255,255,0.6);
+  z-index:10;
 }
 .avatar-wrap:hover{transform:scale(1.06)}
 .avatar-wrap img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
 .nick{
   font-size:13px;color:var(--text);margin-bottom:14px;font-weight:600;
   cursor:pointer;padding:3px 10px;border-radius:10px;transition:.2s;
+  z-index:10;position:relative;
 }
 .nick:hover{background:rgba(128,128,128,0.1)}
 .nav-item{
@@ -131,17 +133,18 @@ body.night{
 }
 .modal.show{display:flex}
 .modal-box{
-  background:var(--card);border-radius:20px;padding:24px;width:90%;max-width:480px;
-  max-height:80vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);
+  background:var(--card);border-radius:20px;padding:24px;width:90%;max-width:500px;
+  max-height:85vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);
 }
 .modal-box h3{color:var(--accent);margin-bottom:14px;font-size:18px}
 input,textarea,select{
-  border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 14px;font-size:14px;
+  border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:10px 14px;font-size:14px;
   width:100%;margin:5px 0;font-family:inherit;
   background:var(--card);color:var(--text);transition:.25s;
 }
 body.night input,body.night textarea,body.night select{border-color:rgba(255,255,255,0.1)}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+textarea{min-height:80px;resize:vertical}
 .tag{display:inline-block;padding:4px 12px;border-radius:16px;font-size:11px;background:var(--accent-light);margin:2px;cursor:pointer;font-weight:500;transition:.2s}
 .tag.active{background:var(--accent);color:#fff}
 .badge{display:inline-block;background:var(--accent);color:#fff;border-radius:16px;padding:2px 9px;font-size:10px;margin-left:4px;font-weight:600}
@@ -154,30 +157,14 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);
 .stat-mini{text-align:center;padding:12px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
 .stat-mini .val{font-size:24px;font-weight:700;color:var(--accent)}
 .stat-mini .lbl{font-size:11px;color:var(--sub);margin-top:2px;font-weight:500}
-.word-card{
-  padding:14px 18px;border-radius:var(--radius);
-  background:var(--card);
-  cursor:pointer;transition:.25s;text-align:center;font-size:16px;
-  box-shadow:var(--shadow);margin:5px;display:inline-block;min-width:90px;
-}
-.word-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.1);transform:translateY(-2px)}
-.toast{
-  position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--accent);
-  color:#fff;padding:12px 28px;border-radius:30px;z-index:200;font-size:14px;
-  animation:fadeIn .3s;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,0.2);font-weight:600;
-}
-@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(-16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.inline-input{
-  border:1.5px solid rgba(0,0,0,0.1);border-radius:10px;padding:9px 14px;font-size:14px;
-  width:140px;margin:0 4px;font-family:inherit;
-  background:var(--card);color:var(--text);
-}
-.inline-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
-canvas{max-width:100%}
-.recite-zone{margin:10px 0}
-.recite-zone h4{font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-weight:700}
-.prediction-badge{display:inline-block;padding:4px 12px;border-radius:14px;font-size:12px;font-weight:700}
-.zone-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+/* 优化后的单词表 */
+.word-table{width:100%;border-collapse:collapse}
+.word-table td{padding:10px 12px;vertical-align:middle}
+.word-table .en-col{font-size:16px;font-weight:600;text-align:left;width:45%}
+.word-table .cn-col{font-size:15px;text-align:right;width:35%;color:var(--sub)}
+.word-table .action-col{text-align:right;width:20%}
+.word-table tr{border-bottom:1px solid rgba(0,0,0,0.06)}
+body.night .word-table tr{border-bottom-color:rgba(255,255,255,0.06)}
 .pomodoro-overlay{
   position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);
   z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -199,7 +186,7 @@ canvas{max-width:100%}
 <div class="sidebar" id="sidebar"></div>
 <div class="main" id="mainContent">
   <div class="greeting" id="greetingText">👋 早安，小法硕</div>
-  <div class="greeting-sub" id="greetingSub">今天的努力，是明天成功的伏笔 ✨</div>
+  <div class="greeting-sub" id="greetingSub">✨ 每一次积累，都在靠近梦想</div>
   <div class="domains" id="domainTabs"></div>
   <div id="dailyModule" class="module active"></div>
   <div id="errorModule" class="module"></div>
@@ -214,11 +201,18 @@ canvas{max-width:100%}
   <div class="pomodoro-timer" id="pomodoroTimer">25:00</div>
   <div class="flex" style="gap:10px"><button class="btn btn-sm" onclick="setPomodoro(25)">25分钟</button><button class="btn btn-sm" onclick="setPomodoro(45)">45分钟</button></div>
   <div class="flex" style="gap:10px"><button class="btn btn-primary" id="pomodoroStartBtn" onclick="togglePomodoro()">开始专注</button><button class="btn" onclick="closePomodoro()">退出</button></div>
+  <div class="ambient-select" style="display:flex;gap:8px;margin-top:8px">
+    <span style="font-size:13px;color:var(--sub)">背景音：</span>
+    <span class="ambient-btn active" onclick="setAmbient('none')">🔇 无</span>
+    <span class="ambient-btn" onclick="setAmbient('rain')">🌧️ 雨声</span>
+    <span class="ambient-btn" onclick="setAmbient('forest')">🌲 森林</span>
+    <span class="ambient-btn" onclick="setAmbient('cafe')">☕ 咖啡馆</span>
+  </div>
 </div>
 
 <script>
 // ==================== 数据核心 ====================
-const STORAGE_KEY = 'fashuo_v12';
+const STORAGE_KEY = 'fashuo_v14';
 let D = {
   domain:'major', nav:'daily', dateOffset:0,
   tasks:{}, templates:[], errors:{major:[],politics:[]},
@@ -239,7 +233,7 @@ const ACHIEVEMENTS = [
 ];
 
 function getStreak(){let s=0;const d=new Date();d.setHours(0,0,0,0);while(true){const ds=d.toISOString().split('T')[0];const t=D.tasks[ds];if(t&&t.length>0&&t.some(x=>x.done)){s++;d.setDate(d.getDate()-1)}else break}return s}
-function getTotalHours(){let m=0;Object.values(D.tasks).forEach(a=>a.forEach(t=>m+=t.duration||30));return m/60}
+function getTotalHours(){let m=0;Object.values(D.tasks).forEach(a=>a.forEach(t=>{if(t.done)m+=t.duration||30}));return m/60}
 function getAvgErrorAccuracy(){const a=[...D.errors.major,...D.errors.politics];if(!a.length)return 0;return a.reduce((s,e)=>s+predictAcc(e),0)/a.length}
 function getReciteMastered(){return [...D.recites.major,...D.recites.politics].filter(k=>k.stage>=5).length}
 function checkAchievements(){let u=false;ACHIEVEMENTS.forEach(a=>{if(!D.achievements.includes(a.id)&&a.cond()){D.achievements.push(a.id);u=true;toast(`🏅 解锁成就：${a.name}`)}});if(u)save()}
@@ -260,12 +254,11 @@ load();
 function applyNavStyle(){
   const nav=document.getElementById('sidebar');
   if(nav){
-    nav.style.background=`rgba(255,255,255,${D.settings.navOpacity})`;
-    nav.style.setProperty('--nav-blur',D.settings.navBlur+'px');
-    nav.style.backdropFilter=`blur(${D.settings.navBlur}px)`;
-    nav.style.webkitBackdropFilter=`blur(${D.settings.navBlur}px)`;
-    document.documentElement.style.setProperty('--nav-blur',D.settings.navBlur+'px');
-    document.documentElement.style.setProperty('--nav-bg',`rgba(255,255,255,${D.settings.navOpacity})`);
+    const r=D.settings.navOpacity,g=D.settings.navBlur;
+    nav.style.background=`rgba(255,255,255,${r})`;
+    nav.style.backdropFilter=`blur(${g}px)`;nav.style.webkitBackdropFilter=`blur(${g}px)`;
+    document.documentElement.style.setProperty('--nav-bg',`rgba(255,255,255,${r})`);
+    document.documentElement.style.setProperty('--nav-blur',`${g}px`);
   }
 }
 
@@ -340,6 +333,13 @@ function getCountdown(){
   return Math.ceil((exam-now)/86400000);
 }
 
+/* 弹窗背景锁定 */
+function openModal(html){
+  const m=document.getElementById('modal');m.innerHTML=html;m.classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.body.style.overflow='';}
+
 // ==================== 每日计划 ====================
 function getDayTasks(ds){if(!D.tasks[ds])D.tasks[ds]=[];return D.tasks[ds]}
 function renderDaily(){
@@ -364,7 +364,6 @@ function renderDaily(){
     <button class="fab" onclick="openTaskForm()">+</button>`;
   if(document.getElementById('statsView').style.display!=='none')updateStats()
 }
-
 function renderTaskList(tasks,ds){
   if(!tasks.length)return `<div class="card" style="text-align:center;color:var(--sub);padding:28px">✨ 今天还没有任务<br><small>点右下角 + 开始规划吧</small></div>`;
   return tasks.map(t=>`
@@ -373,23 +372,20 @@ function renderTaskList(tasks,ds){
       <div class="flex"><button class="btn btn-sm" onclick="editTask('${ds}','${t.id}')">✎</button><button class="btn btn-sm" onclick="deleteTask('${ds}','${t.id}')">✕</button></div>
     </div>`).join('')
 }
-
 function shiftDate(n){D.dateOffset+=n;renderAll()}
 function toggleTask(ds,id){const t=getDayTasks(ds).find(x=>x.id===id);if(t)t.done=!t.done;save();renderDaily();checkAchievements()}
 function deleteTask(ds,id){D.tasks[ds]=getDayTasks(ds).filter(x=>x.id!==id);save();renderDaily()}
 function openTaskForm(ed,ei){
-  const m=document.getElementById('modal');let t=null;if(ed&&ei)t=getDayTasks(ed).find(x=>x.id===ei);
+  let t=null;if(ed&&ei)t=getDayTasks(ed).find(x=>x.id===ei);
   const rpt=t&&t.repeatDays?t.repeatDays.join(','):'';
-  m.innerHTML=`<div class="modal-box"><h3>${t?'编辑任务':'新建任务'}</h3>
+  openModal(`<div class="modal-box"><h3>${t?'编辑任务':'新建任务'}</h3>
     <input id="tfName" placeholder="任务名称" value="${t?esc(t.name):''}">
     <div class="flex"><input id="tfTime" placeholder="时间" value="${t&&t.planTime?t.planTime:''}" style="flex:1"><input id="tfDuration" type="number" placeholder="分钟" value="${t?t.duration:30}" style="flex:1;max-width:100px"></div>
     <label style="display:flex;align-items:center;gap:6px;margin:6px 0"><input type="checkbox" id="tfRepeat" ${t&&t.repeatDays?'checked':''}> 每日重复</label>
     <div id="repeatDaysPicker" style="display:${t&&t.repeatDays?'block':'none'}">${['周一','周二','周三','周四','周五','周六','周日'].map((d,i)=>`<span class="tag${rpt.includes(String(i+1))?' active':''}" id="rd${i+1}" onclick="this.classList.toggle('active')">${d}</span>`).join('')}</div>
-    <div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button> <button class="btn btn-primary" onclick="saveTask('${ed||''}','${ei||''}')">保存</button></div></div>`;
+    <div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button> <button class="btn btn-primary" onclick="saveTask('${ed||''}','${ei||''}')">保存</button></div></div>`);
   document.getElementById('tfRepeat').onchange=function(){document.getElementById('repeatDaysPicker').style.display=this.checked?'block':'none'};
-  m.classList.add('show')
 }
-function closeModal(){document.getElementById('modal').classList.remove('show')}
 function saveTask(ed,ei){
   const name=document.getElementById('tfName').value.trim();if(!name)return toast('请输入任务名称');
   const pt=document.getElementById('tfTime').value;const dur=parseInt(document.getElementById('tfDuration').value)||30;
@@ -411,8 +407,8 @@ function updateStats(){
   let tm=0,cp=0,tt=0;const hd={};
   days.forEach(ds=>{const arr=D.tasks[ds]||[];let dm=0,dd=0;arr.forEach(t=>{dm+=t.duration||30;if(t.done)dd++;tt++});tm+=dm;cp+=dd;hd[ds]={min:dm,done:dd,total:arr.length}});
   const hg=document.getElementById('heatmap');if(hg){let h='';days.forEach(ds=>{const hh=hd[ds]||{min:0,done:0,total:0};const r=hh.total?hh.done/hh.total:0;let c='#eee';if(hh.total>0){if(r>=0.8)c=D.settings.accentColor;else if(r>=0.5)c=D.settings.accentColor+'99';else if(r>0)c=D.settings.accentColor+'55';else c=D.settings.accentColor+'22'}h+=`<div class="heatmap-cell" style="background:${c}" title="${ds}: ${hh.done}/${hh.total}"></div>`});hg.innerHTML=h}
-  const sn=document.getElementById('statsNumbers');if(sn)sn.innerHTML=`<div class="stat-mini"><div class="val">${(tm/60).toFixed(1)}h</div><div class="lbl">总时长</div></div><div class="stat-mini"><div class="val">${days.length?(tm/60/days.length).toFixed(1):'0'}h</div><div class="lbl">日均</div></div><div class="stat-mini"><div class="val">${cp}</div><div class="lbl">已完成</div></div><div class="stat-mini"><div class="val">${tt?Math.round(cp/tt*100):0}%</div><div class="lbl">完成率</div></div>`;
-  drawTrendChart();const rc=document.getElementById('reportContent');if(rc)rc.innerHTML=`<p>📅 统计范围：${days.length}天  |  ⏱ 总专注：${(tm/60).toFixed(1)}小时  |  ✅ 完成率：${tt?Math.round(cp/tt*100):0}%</p>`;drawExamChart()
+  const sn=document.getElementById('statsNumbers');if(sn)sn.innerHTML=`<div class="stat-mini"><div class="val">${(tm/60).toFixed(1)}h</div><div class="lbl">总专注</div></div><div class="stat-mini"><div class="val">${days.length?(tm/60/days.length).toFixed(1):'0'}h</div><div class="lbl">日均</div></div><div class="stat-mini"><div class="val">${cp}</div><div class="lbl">已完成</div></div><div class="stat-mini"><div class="val">${tt?Math.round(cp/tt*100):0}%</div><div class="lbl">完成率</div></div>`;
+  drawTrendChart();const rc=document.getElementById('reportContent');if(rc)rc.innerHTML=`<p>📅 范围：${days.length}天  |  ⏱ 总专注：${(tm/60).toFixed(1)}h  |  ✅ 完成率：${tt?Math.round(cp/tt*100):0}%</p>`;drawExamChart()
 }
 function drawTrendChart(){
   const canvas=document.getElementById('trendCanvas');if(!canvas)return;
@@ -434,48 +430,68 @@ function drawExamChart(){
   ex.forEach((e,i)=>{const x=pad+(cw/(Math.max(ex.length-1,1)))*i;const y=pad+ch-((e.score-minS)/(maxS-minS||1))*ch;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke()
 }
 
-// ==================== 番茄钟 ====================
-let pomodoroInterval=null,pomodoroSeconds=25*60,pomodoroRunning=false;
+// ==================== 番茄钟 + 白噪音 ====================
+let pomodoroInterval=null,pomodoroSeconds=25*60,pomodoroRunning=false,ambientAudio=null,ambientType='none';
 function openPomodoro(){document.getElementById('pomodoroOverlay').classList.remove('hidden');pomodoroSeconds=25*60;updateTimerDisplay()}
-function closePomodoro(){if(pomodoroRunning)return;document.getElementById('pomodoroOverlay').classList.add('hidden')}
+function closePomodoro(){if(pomodoroRunning)return;stopAmbient();document.getElementById('pomodoroOverlay').classList.add('hidden')}
 function setPomodoro(min){pomodoroSeconds=min*60;updateTimerDisplay();pomodoroRunning=false;clearInterval(pomodoroInterval);document.getElementById('pomodoroStartBtn').textContent='开始专注'}
 function togglePomodoro(){pomodoroRunning?pausePomodoro():startPomodoro()}
 function startPomodoro(){pomodoroRunning=true;document.getElementById('pomodoroStartBtn').textContent='暂停';pomodoroInterval=setInterval(()=>{pomodoroSeconds--;updateTimerDisplay();if(pomodoroSeconds<=0)finishPomodoro()},1000)}
 function pausePomodoro(){pomodoroRunning=false;clearInterval(pomodoroInterval);document.getElementById('pomodoroStartBtn').textContent='继续'}
 function updateTimerDisplay(){const m=Math.floor(pomodoroSeconds/60),s=pomodoroSeconds%60;document.getElementById('pomodoroTimer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
-function finishPomodoro(){clearInterval(pomodoroInterval);pomodoroRunning=false;document.getElementById('pomodoroStartBtn').textContent='开始专注';pomodoroSeconds=25*60;updateTimerDisplay();const ds=todayStr();getDayTasks(ds).push({id:Date.now().toString(),name:'🍅 专注时段',planTime:'',duration:25,done:true});D.pomodoroHistory.push({date:ds,duration:25});save();renderDaily();closePomodoro();toast('🍅 专注完成！+25分钟')}
+function finishPomodoro(){clearInterval(pomodoroInterval);pomodoroRunning=false;document.getElementById('pomodoroStartBtn').textContent='开始专注';pomodoroSeconds=25*60;updateTimerDisplay();const ds=todayStr();getDayTasks(ds).push({id:Date.now().toString(),name:'🍅 专注',planTime:'',duration:25,done:true});D.pomodoroHistory.push({date:ds,duration:25});save();renderDaily();stopAmbient();closePomodoro();toast('🍅 专注完成！+25分钟')}
+function setAmbient(type){
+  stopAmbient();ambientType=type;
+  document.querySelectorAll('.ambient-btn').forEach(b=>b.classList.remove('active'));
+  if(type==='none')return;
+  document.querySelector(`.ambient-btn[onclick*="${type}"]`)?.classList.add('active');
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const bufferSize=2*ctx.sampleRate,buffer=ctx.createBuffer(1,bufferSize,ctx.sampleRate);
+    const data=buffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){
+      if(type==='rain'){data[i]=Math.random()*2-1;if(i%3===0)data[i]*=0.3}
+      else if(type==='forest'){data[i]=(Math.random()*2-1)*0.5;if(Math.random()<0.02)data[i]*=2}
+      else if(type==='cafe'){data[i]=(Math.random()*2-1)*0.7;if(Math.random()<0.01)data[i]*=3}
+      else data[i]=0;
+    }
+    const source=ctx.createBufferSource();source.buffer=buffer;source.loop=true;
+    const gain=ctx.createGain();gain.gain.value=0.3;
+    source.connect(gain);gain.connect(ctx.destination);source.start();
+    ambientAudio={ctx,source,gain};
+  }catch(e){}
+}
+function stopAmbient(){if(ambientAudio){try{ambientAudio.source.stop()}catch(e){}try{ambientAudio.ctx.close()}catch(e){}ambientAudio=null}}
 
 // ==================== 错题本 ====================
 function renderError(){
-  const m=document.getElementById('errorModule');const list=D.errors[D.domain]||[];const allSubjects=[...new Set(list.map(e=>e.subject))];
+  const m=document.getElementById('errorModule');const list=D.errors[D.domain]||[];
   m.innerHTML=`<div class="flex-between"><h3>📝 错题本 · ${domLabel()}</h3><button class="btn btn-primary" onclick="openErrorForm()">+ 添加错题</button></div>
-    <div class="search-box"><input id="errSearch" placeholder="🔍 搜索" oninput="renderErrorList()"><select id="errSubFilter" onchange="renderErrorList()" style="width:auto;margin:0"><option value="all">全部</option>${allSubjects.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')}</select></div><div id="errList"></div>`;
+    <div class="search-box"><input id="errSearch" placeholder="🔍 搜索科目/章节/关键词" oninput="renderErrorList()"></div><div id="errList"></div>`;
   renderErrorList()
 }
 function renderErrorList(){
-  const list=D.errors[D.domain]||[];const q=(document.getElementById('errSearch')?.value||'').toLowerCase();const sf=document.getElementById('errSubFilter')?.value||'all';let f=list;
-  if(q)f=f.filter(e=>e.subject.toLowerCase().includes(q)||e.chapter.toLowerCase().includes(q)||e.question.toLowerCase().includes(q));
-  if(sf!=='all')f=f.filter(e=>e.subject===sf);const c=document.getElementById('errList');if(!c)return;
+  const list=D.errors[D.domain]||[];const q=(document.getElementById('errSearch')?.value||'').toLowerCase();
+  let f=list;if(q)f=f.filter(e=>e.subject.toLowerCase().includes(q)||e.chapter.toLowerCase().includes(q)||e.question.toLowerCase().includes(q));
+  const c=document.getElementById('errList');if(!c)return;
   if(!f.length){c.innerHTML='<div class="card" style="text-align:center;color:var(--sub)">📝 暂无错题</div>';return}
-  const grp={};list.forEach(e=>{if(!grp[e.subject])grp[e.subject]=0;grp[e.subject]++});let sh='<div class="flex" style="margin-bottom:6px">';for(const[s,cnt]of Object.entries(grp))sh+=`<span class="tag">${esc(s)} <span class="badge">${cnt}</span></span>`;sh+='</div>';
-  c.innerHTML=sh+f.map((e,i)=>{const oi=list.indexOf(e);const pred=predictAcc(e);const color=pred>=70?'var(--accent2)':pred>=40?'var(--accent3)':'#D05555';
+  c.innerHTML=f.map((e,i)=>{const oi=list.indexOf(e);const pred=predictAcc(e);const color=pred>=70?'var(--accent2)':pred>=40?'var(--accent3)':'#D05555';
     return `<div class="card"><div class="flex-between"><span><strong>${esc(e.subject)}</strong> · ${esc(e.chapter)} [${e.type}]</span><span class="prediction-badge" style="background:${color}20;color:${color}">预测 ${pred}%</span></div><div style="margin:4px 0">${esc(e.question)}</div>${e.type==='客观'&&e.options?`<div style="font-size:12px;color:var(--sub)">选项: ${e.options.map(o=>esc(o.key)+'. '+esc(o.text)).join(' | ')}</div>`:''}<div class="flex"><button class="btn btn-sm" onclick="reviewError(${oi})">重做</button><button class="btn btn-sm" onclick="editError(${oi})">✎</button><button class="btn btn-sm" onclick="deleteError(${oi})">✕</button></div></div>`}).join('')
 }
 function predictAcc(e){if(!e.history||!e.history.length)return 50;const correct=e.history.filter(h=>h.correct).length;return Math.round(correct/e.history.length*100)}
 function openErrorForm(ei){
-  const m=document.getElementById('modal');let e=null;if(ei!==undefined)e=D.errors[D.domain][ei];
+  let e=null;if(ei!==undefined)e=D.errors[D.domain][ei];
   const subjects=[...new Set(D.errors[D.domain].map(x=>x.subject))];const chapters=[...new Set(D.errors[D.domain].filter(x=>!e||x.subject===e.subject).map(x=>x.chapter))];
-  m.innerHTML=`<div class="modal-box"><h3>${e?'编辑':'新增'}错题</h3>
+  openModal(`<div class="modal-box"><h3>${e?'编辑':'新增'}错题</h3>
     <input id="errSubject" placeholder="科目" value="${e?esc(e.subject):''}" list="subjList"><datalist id="subjList">${subjects.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
     <input id="errChapter" placeholder="章节" value="${e?esc(e.chapter):''}" list="chapList"><datalist id="chapList">${chapters.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
     <select id="errType" onchange="toggleErrType()"><option value="客观" ${e&&e.type==='客观'?'selected':''}>客观题</option><option value="主观" ${e&&e.type==='主观'?'selected':''}>主观题</option></select>
-    <textarea id="errQuestion" placeholder="题目内容">${e?esc(e.question):''}</textarea>
+    <textarea id="errQuestion" placeholder="题目内容" style="min-height:100px">${e?esc(e.question):''}</textarea>
     <input type="file" accept="image/*" id="errImage" onchange="handleErrImage()"><small>上传截图</small>
     <div id="errOptsContainer">${e&&e.type==='客观'?renderOptsEditor(e):''}</div>
     <input id="errAnswer" placeholder="正确答案" value="${e?esc(e.answer):''}">
-    <textarea id="errNote" placeholder="知识点笔记">${e&&e.note?esc(e.note):''}</textarea>
-    <div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveError(${ei!==undefined?ei:-1})">保存</button></div></div>`;
-  m.classList.add('show')
+    <textarea id="errNote" placeholder="知识点笔记" style="min-height:100px">${e&&e.note?esc(e.note):''}</textarea>
+    <div style="text-align:right"><button class="btn" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveError(${ei!==undefined?ei:-1})">保存</button></div></div>`);
 }
 function renderOptsEditor(e){const opts=e?e.options:[{key:'A',text:''},{key:'B',text:''},{key:'C',text:''},{key:'D',text:''}];return`<div><strong>选项</strong>${opts.map(o=>`<div class="flex"><span style="width:20px">${o.key}</span><input value="${esc(o.text)}" data-key="${o.key}" class="optInput" style="flex:1"></div>`).join('')}<button class="btn btn-sm" onclick="addOption()">+选项</button></div>`}
 function toggleErrType(){const t=document.getElementById('errType')?.value;const c=document.getElementById('errOptsContainer');if(c)c.innerHTML=t==='客观'?renderOptsEditor({options:[{key:'A',text:''},{key:'B',text:''},{key:'C',text:''},{key:'D',text:''}]}):''}
@@ -491,51 +507,109 @@ function saveError(ei){
 function editError(i){openErrorForm(i)}
 function deleteError(i){D.errors[D.domain].splice(i,1);save();renderError()}
 function reviewError(i){
-  const e=D.errors[D.domain][i];const m=document.getElementById('modal');
-  m.innerHTML=`<div class="modal-box"><h3>回顾错题</h3><p><strong>${esc(e.subject)} · ${esc(e.chapter)}</strong> [${e.type}]</p><p>${esc(e.question)}</p>${e.type==='客观'&&e.options?`<div>${e.options.map(o=>`<label class="tag"><input type="radio" name="reviewOpt" value="${esc(o.key)}"> ${o.key}. ${o.text}</label>`).join('')}</div>`:`<textarea id="reviewSubj" placeholder="你的答案"></textarea>`}<button class="btn btn-primary" onclick="submitReview(${i})">提交</button><div id="reviewResult" style="margin-top:8px;display:none"></div></div>`;
-  m.classList.add('show')
+  const e=D.errors[D.domain][i];
+  openModal(`<div class="modal-box"><h3>回顾错题</h3><p><strong>${esc(e.subject)} · ${esc(e.chapter)}</strong> [${e.type}]</p><p>${esc(e.question)}</p>${e.type==='客观'&&e.options?`<div>${e.options.map(o=>`<label class="tag"><input type="radio" name="reviewOpt" value="${esc(o.key)}"> ${o.key}. ${o.text}</label>`).join('')}</div>`:`<textarea id="reviewSubj" placeholder="你的答案"></textarea>`}<button class="btn btn-primary" onclick="submitReview(${i})">提交</button><div id="reviewResult" style="margin-top:8px;display:none"></div></div>`);
 }
 function submitReview(i){const e=D.errors[D.domain][i];let u='';if(e.type==='客观'){const sel=document.querySelector('input[name="reviewOpt"]:checked');u=sel?sel.value:''}else{u=document.getElementById('reviewSubj')?.value||''}const ok=u.trim()===e.answer.trim();e.history.push({date:new Date().toISOString(),correct:ok});const rr=document.getElementById('reviewResult');rr.style.display='block';rr.innerHTML=ok?'<span style="color:var(--accent2)">✅ 正确</span>':'<span style="color:#D05555">❌ 答案：'+esc(e.answer)+'</span>';save()}
 
 // ==================== 知识点库 ====================
 function renderKnowledge(){
   const m=document.getElementById('knowledgeModule');const list=D.knowledge[D.domain]||[];
-  m.innerHTML=`<div class="flex-between"><h3>📚 知识点库 · ${domLabel()}</h3><button class="btn btn-primary" onclick="openKnowledgeForm()">+ 添加</button></div><div id="kList">${list.map((k,i)=>`<div class="card"><strong>${esc(k.subject)} · ${esc(k.chapter)}</strong><div>${esc(k.content)}</div><button class="btn btn-sm" onclick="addKnowledgeToRecite(${i})">💡 加入背诵</button></div>`).join('')||'<div class="card" style="color:var(--sub)">暂无</div>'}</div>`;
+  m.innerHTML=`<div class="flex-between"><h3>📚 知识点库 · ${domLabel()}</h3><button class="btn btn-primary" onclick="openKnowledgeForm()">+ 添加</button></div>
+    <div class="search-box"><input id="kSearch" placeholder="🔍 搜索知识点" oninput="renderKnowledgeList()"></div><div id="kList"></div>`;
+  renderKnowledgeList()
 }
-function openKnowledgeForm(){const m=document.getElementById('modal');m.innerHTML=`<div class="modal-box"><h3>添加知识点</h3><input id="kSubject" placeholder="科目"><input id="kChapter" placeholder="章节"><textarea id="kContent" placeholder="内容"></textarea><button class="btn btn-primary" onclick="saveKnowledge()">保存</button></div>`;m.classList.add('show')}
-function saveKnowledge(){const s=document.getElementById('kSubject').value.trim(),c=document.getElementById('kChapter').value.trim(),co=document.getElementById('kContent').value.trim();if(!s||!co)return toast('必填');D.knowledge[D.domain].push({id:Date.now().toString(),subject:s,chapter:c,content:co,source:'manual',type:'normal'});save();closeModal();renderKnowledge()}
+function renderKnowledgeList(){
+  const list=D.knowledge[D.domain]||[];const q=(document.getElementById('kSearch')?.value||'').toLowerCase();
+  let f=list;if(q)f=f.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
+  const c=document.getElementById('kList');if(!c)return;
+  if(!f.length){c.innerHTML='<div class="card" style="color:var(--sub)">📚 暂无知识点</div>';return}
+  c.innerHTML=f.map((k,i)=>{const oi=list.indexOf(k);return`<div class="card"><strong>${esc(k.subject)} · ${esc(k.chapter)}</strong><div>${esc(k.content)}</div><button class="btn btn-sm" onclick="addKnowledgeToRecite(${oi})">💡 加入背诵</button></div>`}).join('')
+}
+function openKnowledgeForm(){openModal(`<div class="modal-box"><h3>添加知识点</h3><input id="kSubject" placeholder="科目"><input id="kChapter" placeholder="章节"><textarea id="kContent" placeholder="内容" style="min-height:120px"></textarea><button class="btn btn-primary" onclick="saveKnowledge()">保存</button></div>`)}
+function saveKnowledge(){const s=document.getElementById('kSubject').value.trim(),c=document.getElementById('kChapter').value.trim(),co=document.getElementById('kContent').value.trim();if(!s||!co)return toast('必填');D.knowledge[D.domain].push({id:Date.now().toString(),subject:s,chapter:c,content:co,source:'manual'});save();closeModal();renderKnowledge()}
 function addKnowledgeToRecite(i){const k=D.knowledge[D.domain][i];if(!k)return;D.recites[D.domain].push({id:Date.now().toString(),subject:k.subject,chapter:k.chapter,content:k.content,stage:0,nextReview:todayStr()});save();toast('已加入背诵')}
 
 // ==================== 背诵 ====================
 function renderRecite(){
   const m=document.getElementById('reciteModule');const all=D.recites[D.domain]||[];
-  const due=all.filter(k=>k.nextReview&&k.nextReview<=todayStr()),fuzzy=all.filter(k=>k.stage>=1&&k.stage<5&&k.nextReview>todayStr()),mastered=all.filter(k=>k.stage>=5);
   m.innerHTML=`<h3>💡 背诵管理 · ${domLabel()} <span class="badge">${all.length}</span></h3>
-    <div class="flex" style="margin-bottom:8px"><input class="inline-input" id="reciteSubject" placeholder="科目"><input class="inline-input" id="reciteChapter" placeholder="章节"><input class="inline-input" id="reciteContent" placeholder="内容" style="flex:1"><button class="btn btn-primary btn-sm" onclick="addReciteItem()">+添加</button></div>
+    <div class="flex" style="margin-bottom:8px"><input class="inline-input" id="reciteSearch" placeholder="🔍 搜索" oninput="renderRecite()" style="flex:1;min-width:200px"><input class="inline-input" id="reciteSubject" placeholder="科目"><input class="inline-input" id="reciteChapter" placeholder="章节"><input class="inline-input" id="reciteContent" placeholder="内容" style="flex:2"><button class="btn btn-primary btn-sm" onclick="addReciteItem()">+添加</button></div>`;
+  const q=(document.getElementById('reciteSearch')?.value||'').toLowerCase();
+  let filtered=all;if(q)filtered=filtered.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
+  const due=filtered.filter(k=>k.nextReview&&k.nextReview<=todayStr()),fuzzy=filtered.filter(k=>k.stage>=1&&k.stage<5&&k.nextReview>todayStr()),mastered=filtered.filter(k=>k.stage>=5);
+  const container=document.createElement('div');
+  container.innerHTML=`
     <div class="recite-zone"><h4><span class="zone-dot" style="background:#D05555"></span>待复习 (${due.length})</h4>${due.map((k,i)=>{const ai=all.indexOf(k);return reciteCard(k,ai)}).join('')||'<div class="card">暂无</div>'}</div>
     <div class="recite-zone"><h4><span class="zone-dot" style="background:var(--accent3)"></span>模糊中 (${fuzzy.length})</h4>${fuzzy.map((k,i)=>{const ai=all.indexOf(k);return reciteCard(k,ai)}).join('')||'<div class="card">暂无</div>'}</div>
     <div class="recite-zone"><h4><span class="zone-dot" style="background:var(--accent2)"></span>已掌握 (${mastered.length})</h4>${mastered.map((k,i)=>{const ai=all.indexOf(k);return reciteCard(k,ai)}).join('')||'<div class="card">暂无</div>'}</div>`;
+  m.appendChild(container);
 }
 function reciteCard(k,idx){return `<div class="card flex-between"><div><strong>${esc(k.subject)} · ${esc(k.chapter)}</strong><br><small>${esc(k.content)}</small><br><small>阶段:${k.stage||0} | 下次:${k.nextReview||'未安排'}</small></div><div class="flex"><button class="btn btn-sm btn2" onclick="reciteFeedback(${idx},'good')">✅</button><button class="btn btn-sm btn3" onclick="reciteFeedback(${idx},'fuzzy')">🤔</button><button class="btn btn-sm" onclick="reciteFeedback(${idx},'forgot')">❌</button><button class="btn btn-sm" onclick="deleteReciteItem(${idx})">🗑</button></div></div>`}
-function addReciteItem(){const s=document.getElementById('reciteSubject')?.value.trim(),c=document.getElementById('reciteChapter')?.value.trim(),co=document.getElementById('reciteContent')?.value.trim();if(!s||!co)return toast('必填');D.recites[D.domain].push({id:Date.now().toString(),subject:s,chapter:c,content:co,stage:0,nextReview:todayStr()});save();renderRecite()}
+function addReciteItem(){const s=document.getElementById('reciteSubject')?.value.trim(),c=document.getElementById('reciteChapter')?.value.trim(),co=document.getElementById('reciteContent')?.value.trim();if(!s||!co)return toast('必填');D.recites[D.domain].push({id:Date.now().toString(),subject:s,chapter:c,content:co,stage:0,nextReview:todayStr()});save();renderRecite();toast('已添加')}
 function deleteReciteItem(i){D.recites[D.domain].splice(i,1);save();renderRecite()}
 function reciteFeedback(idx,type){const k=D.recites[D.domain][idx];if(!k)return;const intervals=[1,2,4,7,15,30,60,120];if(type==='good')k.stage=Math.min((k.stage||0)+1,intervals.length-1);else if(type==='fuzzy')k.stage=Math.max((k.stage||0)-1,0);else k.stage=0;k.nextReview=new Date(Date.now()+intervals[k.stage]*86400000).toISOString().split('T')[0];save();renderRecite()}
 
-// ==================== 英语 ====================
+// ==================== 英语单词（增删改 + 分开对齐） ====================
 let wordView='all';
 function renderEnglish(){
-  D.domain='english';const m=document.getElementById('englishModule');const today=todayStr();const due=D.words.filter(w=>!w.nextReview||w.nextReview<=today);
-  m.innerHTML=`<div class="flex-between"><h3>🔤 英语单词 <span class="badge">${D.words.length}</span></h3><button class="btn btn-primary btn-sm" onclick="startWordQuiz()">📝 多选测试</button></div>
-    <div class="card"><div class="flex"><input class="inline-input" id="wordEnInput" placeholder="英文"><input class="inline-input" id="wordCnInput" placeholder="中文"><button class="btn btn-primary btn-sm" onclick="addWordInline()">添加</button></div></div>
-    <div class="flex" style="margin:8px 0"><button class="btn btn-sm" onclick="toggleWordView('all')">全部</button><button class="btn btn-sm" onclick="toggleWordView('en')">仅英文</button><button class="btn btn-sm" onclick="toggleWordView('cn')">仅中文</button></div>
-    <div id="wordListContainer">${D.words.map((w,i)=>{let d='';if(wordView==='all')d=`${esc(w.en)} — ${esc(w.cn)}`;else if(wordView==='en')d=esc(w.en);else d=esc(w.cn);return`<span class="word-card">${d}</span>`}).join('')}</div>`;
+  D.domain='english';const m=document.getElementById('englishModule');
+  m.innerHTML=`<div class="flex-between"><h3>🔤 英语单词 <span class="badge">${D.words.length}</span></h3>
+      <button class="btn btn-primary btn-sm" onclick="startWordQuiz()">📝 多选测试</button>
+    </div>
+    <div class="card">
+      <div class="flex"><input class="inline-input" id="wordEnInput" placeholder="英文"><input class="inline-input" id="wordCnInput" placeholder="中文"><button class="btn btn-primary btn-sm" onclick="addWordInline()">添加</button></div>
+    </div>
+    <div class="flex" style="margin:8px 0"><button class="btn btn-sm" onclick="toggleWordView('all')">全部</button><button class="btn btn-sm" onclick="toggleWordView('en')">仅英文</button><button class="btn btn-sm" onclick="toggleWordView('cn')">仅中文</button><input class="inline-input" id="wordSearch" placeholder="搜索" oninput="renderWordList()" style="flex:1"></div>
+    <div id="wordListContainer"></div>`;
+  renderWordList()
 }
-function addWordInline(){const en=document.getElementById('wordEnInput')?.value.trim(),cn=document.getElementById('wordCnInput')?.value.trim();if(!en||!cn)return toast('都要填');D.words.push({en,cn,stage:0,nextReview:todayStr()});save();renderEnglish()}
+function renderWordList(){
+  const container=document.getElementById('wordListContainer');if(!container)return;
+  const q=(document.getElementById('wordSearch')?.value||'').toLowerCase();
+  let list=D.words;if(q)list=list.filter(w=>w.en.toLowerCase().includes(q)||w.cn.includes(q));
+  if(!list.length){container.innerHTML='<div class="card" style="text-align:center;color:var(--sub)">暂无单词</div>';return}
+  let html='<table class="word-table">';
+  list.forEach((w,i)=>{
+    let displayEn=esc(w.en),displayCn=esc(w.cn);
+    if(wordView==='en')displayCn='';
+    else if(wordView==='cn')displayEn='';
+    html+=`<tr>
+      <td class="en-col">${displayEn}</td>
+      <td class="cn-col">${displayCn}</td>
+      <td class="action-col">
+        <button class="btn btn-sm" onclick="editWord(${i})">✎</button>
+        <button class="btn btn-sm" onclick="deleteWord(${i})">✕</button>
+      </td>
+    </tr>`;
+  });
+  html+='</table>';
+  container.innerHTML=html;
+}
+function addWordInline(){
+  const en=document.getElementById('wordEnInput')?.value.trim(),cn=document.getElementById('wordCnInput')?.value.trim();
+  if(!en||!cn)return toast('英文和中文都要填');
+  D.words.push({en,cn,stage:0,nextReview:todayStr()});save();renderEnglish();toast('单词已添加');
+}
+function editWord(i){
+  const w=D.words[i];if(!w)return;
+  openModal(`<div class="modal-box"><h3>编辑单词</h3>
+    <input id="editWordEn" placeholder="英文" value="${esc(w.en)}">
+    <input id="editWordCn" placeholder="中文" value="${esc(w.cn)}">
+    <div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button> <button class="btn btn-primary" onclick="saveWordEdit(${i})">保存</button></div></div>`);
+}
+function saveWordEdit(i){
+  const en=document.getElementById('editWordEn').value.trim(),cn=document.getElementById('editWordCn').value.trim();
+  if(!en||!cn)return toast('不能为空');
+  D.words[i].en=en;D.words[i].cn=cn;save();closeModal();renderEnglish();
+}
+function deleteWord(i){D.words.splice(i,1);save();renderEnglish()}
 function toggleWordView(v){wordView=v;renderEnglish()}
-function startWordQuiz(){if(D.words.length<4)return toast('至少4个');const p=[...D.words].sort(()=>Math.random()-0.5);const c=p[0];const o=[c,...p.slice(1,4)].sort(()=>Math.random()-0.5);const m=document.getElementById('modal');m.innerHTML=`<div class="modal-box"><h3>选择正确释义</h3><h2>${esc(c.en)}</h2>${o.map(x=>`<button class="btn" style="display:block;width:100%;margin:4px 0" onclick="checkQuiz('${esc(x.cn)}','${esc(c.cn)}','${esc(c.en)}')">${esc(x.cn)}</button>`).join('')}</div>`;m.classList.add('show')}
+function startWordQuiz(){if(D.words.length<4)return toast('至少4个');const p=[...D.words].sort(()=>Math.random()-0.5);const c=p[0];const o=[c,...p.slice(1,4)].sort(()=>Math.random()-0.5);openModal(`<div class="modal-box"><h3>选择正确释义</h3><h2>${esc(c.en)}</h2>${o.map(x=>`<button class="btn" style="display:block;width:100%;margin:4px 0" onclick="checkQuiz('${esc(x.cn)}','${esc(c.cn)}','${esc(c.en)}')">${esc(x.cn)}</button>`).join('')}</div>`)}
 function checkQuiz(ch,co,en){const ok=ch===co;toast(ok?'✅ 正确':'❌ 答案：'+co);const w=D.words.find(x=>x.en===en);if(w){const iv=[1,2,4,7,15,30,60,120];if(ok)w.stage=Math.min((w.stage||0)+1,iv.length-1);else w.stage=0;w.nextReview=new Date(Date.now()+iv[w.stage]*86400000).toISOString().split('T')[0];save()};closeModal()}
+function speakWord(en){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(en);u.lang='en-US';u.rate=0.9;speechSynthesis.speak(u)}}
 
-// ==================== 设置（含导航栏透明度+取色） ====================
+// ==================== 设置 ====================
 function renderSettings(){
   const m=document.getElementById('settingsModule');
   const presets=['#5B9BD5','#6BBF8A','#F0A060','#9B7EC4','#D05555','#5BA0A0','#E08090','#C8956C','#8A8A8A','#4A90D9'];
@@ -546,7 +620,7 @@ function renderSettings(){
       <button class="btn btn-sm" onclick="toggleNight()">${D.settings.nightMode?'☀️ 白天':'🌙 夜晚'}模式</button></div>
     <div class="card"><h3>🖼 背景图</h3><input type="file" accept="image/*" onchange="uploadBg(this)"><input type="text" id="bgUrl" placeholder="图片URL" value="${D.settings.bgImage||''}"><button class="btn btn-sm" onclick="applyBgUrl()">应用</button><button class="btn btn-sm" onclick="removeBg()">清除</button></div>
     <div class="card"><h3>📦 数据</h3><button class="btn btn-sm" onclick="exportAll()">导出JSON</button><button class="btn btn-sm" onclick="importAll()">导入</button></div>
-    <div class="card"><h3>📅 考研日期</h3><input type="date" id="examDateInput" value="${D.settings.examDate||''}" onchange="D.settings.examDate=this.value;save();renderAll()"><br><small style="color:var(--sub)">设置后每日计划顶部显示倒计时</small></div>`;
+    <div class="card"><h3>📅 考研日期</h3><input type="date" id="examDateInput" value="${D.settings.examDate||''}" onchange="D.settings.examDate=this.value;save();renderAll()"><br><small>设置后每日计划顶部显示倒计时</small></div>`;
 }
 function pickColor(c){D.settings.accentColor=c;document.documentElement.style.setProperty('--accent',c);document.documentElement.style.setProperty('--accent-light',c+'25');save();renderSettings();toast('主题色已更新')}
 function toggleNight(){D.settings.nightMode=!D.settings.nightMode;document.body.classList.toggle('night',D.settings.nightMode);save();renderSettings()}

@@ -157,11 +157,11 @@ textarea{min-height:80px;resize:vertical}
 .stat-mini{text-align:center;padding:12px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
 .stat-mini .val{font-size:24px;font-weight:700;color:var(--accent)}
 .stat-mini .lbl{font-size:11px;color:var(--sub);margin-top:2px;font-weight:500}
-/* 优化后的单词表 */
+/* 英语单词表格 */
 .word-table{width:100%;border-collapse:collapse}
 .word-table td{padding:10px 12px;vertical-align:middle}
-.word-table .en-col{font-size:16px;font-weight:600;text-align:left;width:45%}
-.word-table .cn-col{font-size:15px;text-align:right;width:35%;color:var(--sub)}
+.word-table .en-col{font-size:16px;font-weight:600;text-align:left;width:40%}
+.word-table .cn-col{font-size:15px;text-align:left;width:40%;color:var(--sub)}
 .word-table .action-col{text-align:right;width:20%}
 .word-table tr{border-bottom:1px solid rgba(0,0,0,0.06)}
 body.night .word-table tr{border-bottom-color:rgba(255,255,255,0.06)}
@@ -512,7 +512,7 @@ function reviewError(i){
 }
 function submitReview(i){const e=D.errors[D.domain][i];let u='';if(e.type==='客观'){const sel=document.querySelector('input[name="reviewOpt"]:checked');u=sel?sel.value:''}else{u=document.getElementById('reviewSubj')?.value||''}const ok=u.trim()===e.answer.trim();e.history.push({date:new Date().toISOString(),correct:ok});const rr=document.getElementById('reviewResult');rr.style.display='block';rr.innerHTML=ok?'<span style="color:var(--accent2)">✅ 正确</span>':'<span style="color:#D05555">❌ 答案：'+esc(e.answer)+'</span>';save()}
 
-// ==================== 知识点库 ====================
+// ==================== 知识点库（增删改 + 取消） ====================
 function renderKnowledge(){
   const m=document.getElementById('knowledgeModule');const list=D.knowledge[D.domain]||[];
   m.innerHTML=`<div class="flex-between"><h3>📚 知识点库 · ${domLabel()}</h3><button class="btn btn-primary" onclick="openKnowledgeForm()">+ 添加</button></div>
@@ -524,10 +524,38 @@ function renderKnowledgeList(){
   let f=list;if(q)f=f.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
   const c=document.getElementById('kList');if(!c)return;
   if(!f.length){c.innerHTML='<div class="card" style="color:var(--sub)">📚 暂无知识点</div>';return}
-  c.innerHTML=f.map((k,i)=>{const oi=list.indexOf(k);return`<div class="card"><strong>${esc(k.subject)} · ${esc(k.chapter)}</strong><div>${esc(k.content)}</div><button class="btn btn-sm" onclick="addKnowledgeToRecite(${oi})">💡 加入背诵</button></div>`}).join('')
+  c.innerHTML=f.map((k,i)=>{
+    const origIdx=list.indexOf(k);
+    return `<div class="card">
+      <div class="flex-between"><strong>${esc(k.subject)} · ${esc(k.chapter)}</strong>
+        <div class="flex">
+          <button class="btn btn-sm" onclick="editKnowledge(${origIdx})">✎</button>
+          <button class="btn btn-sm" onclick="deleteKnowledge(${origIdx})">✕</button>
+        </div>
+      </div>
+      <div style="margin:8px 0">${esc(k.content)}</div>
+      <button class="btn btn-sm" onclick="addKnowledgeToRecite(${origIdx})">💡 加入背诵</button>
+    </div>`
+  }).join('')
 }
-function openKnowledgeForm(){openModal(`<div class="modal-box"><h3>添加知识点</h3><input id="kSubject" placeholder="科目"><input id="kChapter" placeholder="章节"><textarea id="kContent" placeholder="内容" style="min-height:120px"></textarea><button class="btn btn-primary" onclick="saveKnowledge()">保存</button></div>`)}
-function saveKnowledge(){const s=document.getElementById('kSubject').value.trim(),c=document.getElementById('kChapter').value.trim(),co=document.getElementById('kContent').value.trim();if(!s||!co)return toast('必填');D.knowledge[D.domain].push({id:Date.now().toString(),subject:s,chapter:c,content:co,source:'manual'});save();closeModal();renderKnowledge()}
+function openKnowledgeForm(editIdx){
+  let k=null;if(editIdx!==undefined)k=D.knowledge[D.domain][editIdx];
+  openModal(`<div class="modal-box"><h3>${k?'编辑':'添加'}知识点</h3>
+    <input id="kSubject" placeholder="科目" value="${k?esc(k.subject):''}">
+    <input id="kChapter" placeholder="章节" value="${k?esc(k.chapter):''}">
+    <textarea id="kContent" placeholder="内容" style="min-height:120px">${k?esc(k.content):''}</textarea>
+    <div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button> <button class="btn btn-primary" onclick="saveKnowledge(${editIdx!==undefined?editIdx:-1})">保存</button></div></div>`);
+}
+function saveKnowledge(editIdx){
+  const s=document.getElementById('kSubject').value.trim(),ch=document.getElementById('kChapter').value.trim(),co=document.getElementById('kContent').value.trim();
+  if(!s||!co)return toast('必填');
+  const kn={id:Date.now().toString(),subject:s,chapter:ch,content:co,source:'manual',type:'normal'};
+  if(editIdx>=0){kn.id=D.knowledge[D.domain][editIdx].id; D.knowledge[D.domain][editIdx]=kn}
+  else{D.knowledge[D.domain].push(kn)}
+  save();closeModal();renderKnowledge()
+}
+function editKnowledge(i){openKnowledgeForm(i)}
+function deleteKnowledge(i){D.knowledge[D.domain].splice(i,1);save();renderKnowledge()}
 function addKnowledgeToRecite(i){const k=D.knowledge[D.domain][i];if(!k)return;D.recites[D.domain].push({id:Date.now().toString(),subject:k.subject,chapter:k.chapter,content:k.content,stage:0,nextReview:todayStr()});save();toast('已加入背诵')}
 
 // ==================== 背诵 ====================
@@ -550,7 +578,7 @@ function addReciteItem(){const s=document.getElementById('reciteSubject')?.value
 function deleteReciteItem(i){D.recites[D.domain].splice(i,1);save();renderRecite()}
 function reciteFeedback(idx,type){const k=D.recites[D.domain][idx];if(!k)return;const intervals=[1,2,4,7,15,30,60,120];if(type==='good')k.stage=Math.min((k.stage||0)+1,intervals.length-1);else if(type==='fuzzy')k.stage=Math.max((k.stage||0)-1,0);else k.stage=0;k.nextReview=new Date(Date.now()+intervals[k.stage]*86400000).toISOString().split('T')[0];save();renderRecite()}
 
-// ==================== 英语单词（增删改 + 分开对齐） ====================
+// ==================== 英语单词 ====================
 let wordView='all';
 function renderEnglish(){
   D.domain='english';const m=document.getElementById('englishModule');

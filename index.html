@@ -177,6 +177,14 @@ body.night .word-table tr{border-bottom-color:rgba(255,255,255,0.06)}
 }
 .slider-row{display:flex;align-items:center;gap:8px;margin:4px 0}
 .slider-row input[type=range]{flex:1;accent-color:var(--accent)}
+/* 科目标签栏 */
+.subject-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.subject-tab {
+  padding: 5px 14px; border-radius: 20px; background: var(--accent-light);
+  color: var(--accent); font-size: 12px; cursor: pointer; font-weight: 500;
+  transition: .2s; border: 2px solid transparent;
+}
+.subject-tab.active { background: var(--accent); color: #fff; }
 </style>
 </head>
 <body>
@@ -222,6 +230,8 @@ let D = {
   profile:{nickname:'小法硕',avatar:''},
   achievements:[], pomodoroHistory:[]
 };
+// 预设科目列表（可手动输入覆盖）
+const PRESET_SUBJECTS = ['刑法','民法','法制史','宪法','法理学','英语','政治'];
 
 const ACHIEVEMENTS = [
   {id:'streak7', name:'七日修士', icon:'🔥', cond:()=>getStreak()>=7},
@@ -332,11 +342,7 @@ function getCountdown(){
   return Math.ceil((exam-now)/86400000);
 }
 
-// 弹窗管理
-function openModal(html){
-  const m=document.getElementById('modal');m.innerHTML=html;m.classList.add('show');
-  document.body.style.overflow='hidden';
-}
+function openModal(html){const m=document.getElementById('modal');m.innerHTML=html;m.classList.add('show');document.body.style.overflow='hidden';}
 function closeModal(){document.getElementById('modal').classList.remove('show');document.body.style.overflow='';}
 
 // ==================== 每日计划 ====================
@@ -462,16 +468,22 @@ function setAmbient(type){
 }
 function stopAmbient(){if(ambientAudio){try{ambientAudio.source.stop()}catch(e){}try{ambientAudio.ctx.close()}catch(e){}ambientAudio=null}}
 
-// ==================== 错题本（重做弹窗已加取消） ====================
+// ==================== 错题本（含科目筛选、增删改、重做取消） ====================
+let errorSubjectFilter = 'all';
 function renderError(){
   const m=document.getElementById('errorModule');const list=D.errors[D.domain]||[];
+  const allSubjects = [...new Set(list.map(e=>e.subject))];
   m.innerHTML=`<div class="flex-between"><h3>📝 错题本 · ${domLabel()}</h3><button class="btn btn-primary" onclick="openErrorForm()">+ 添加错题</button></div>
-    <div class="search-box"><input id="errSearch" placeholder="🔍 搜索科目/章节/关键词" oninput="renderErrorList()"></div><div id="errList"></div>`;
+    <div class="subject-tabs" id="errSubjectTabs"></div>
+    <div class="search-box"><input id="errSearch" placeholder="🔍 搜索关键词" oninput="renderErrorList()"></div><div id="errList"></div>`;
+  renderSubjectTabs('errSubjectTabs', allSubjects, errorSubjectFilter, (v)=>{ errorSubjectFilter=v; renderErrorList(); });
   renderErrorList()
 }
 function renderErrorList(){
   const list=D.errors[D.domain]||[];const q=(document.getElementById('errSearch')?.value||'').toLowerCase();
-  let f=list;if(q)f=f.filter(e=>e.subject.toLowerCase().includes(q)||e.chapter.toLowerCase().includes(q)||e.question.toLowerCase().includes(q));
+  let f=list;
+  if(errorSubjectFilter!=='all') f = f.filter(e=>e.subject===errorSubjectFilter);
+  if(q) f=f.filter(e=>e.subject.toLowerCase().includes(q)||e.chapter.toLowerCase().includes(q)||e.question.toLowerCase().includes(q));
   const c=document.getElementById('errList');if(!c)return;
   if(!f.length){c.innerHTML='<div class="card" style="text-align:center;color:var(--sub)">📝 暂无错题</div>';return}
   c.innerHTML=f.map((e,i)=>{const oi=list.indexOf(e);const pred=predictAcc(e);const color=pred>=70?'var(--accent2)':pred>=40?'var(--accent3)':'#D05555';
@@ -480,7 +492,8 @@ function renderErrorList(){
 function predictAcc(e){if(!e.history||!e.history.length)return 50;const correct=e.history.filter(h=>h.correct).length;return Math.round(correct/e.history.length*100)}
 function openErrorForm(ei){
   let e=null;if(ei!==undefined)e=D.errors[D.domain][ei];
-  const subjects=[...new Set(D.errors[D.domain].map(x=>x.subject))];const chapters=[...new Set(D.errors[D.domain].filter(x=>!e||x.subject===e.subject).map(x=>x.chapter))];
+  const subjects = [...new Set([...PRESET_SUBJECTS, ...D.errors[D.domain].map(x=>x.subject)])];
+  const chapters = [...new Set(D.errors[D.domain].filter(x=>!e||x.subject===e.subject).map(x=>x.chapter))];
   openModal(`<div class="modal-box"><h3>${e?'编辑':'新增'}错题</h3>
     <input id="errSubject" placeholder="科目" value="${e?esc(e.subject):''}" list="subjList"><datalist id="subjList">${subjects.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
     <input id="errChapter" placeholder="章节" value="${e?esc(e.chapter):''}" list="chapList"><datalist id="chapList">${chapters.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
@@ -511,16 +524,22 @@ function reviewError(i){
 }
 function submitReview(i){const e=D.errors[D.domain][i];let u='';if(e.type==='客观'){const sel=document.querySelector('input[name="reviewOpt"]:checked');u=sel?sel.value:''}else{u=document.getElementById('reviewSubj')?.value||''}const ok=u.trim()===e.answer.trim();e.history.push({date:new Date().toISOString(),correct:ok});const rr=document.getElementById('reviewResult');rr.style.display='block';rr.innerHTML=ok?'<span style="color:var(--accent2)">✅ 正确</span>':'<span style="color:#D05555">❌ 答案：'+esc(e.answer)+'</span>';save()}
 
-// ==================== 知识点库 ====================
+// ==================== 知识点库（科目筛选、增删改、取消） ====================
+let knowledgeSubjectFilter = 'all';
 function renderKnowledge(){
   const m=document.getElementById('knowledgeModule');const list=D.knowledge[D.domain]||[];
+  const allSubjects = [...new Set(list.map(k=>k.subject))];
   m.innerHTML=`<div class="flex-between"><h3>📚 知识点库 · ${domLabel()}</h3><button class="btn btn-primary" onclick="openKnowledgeForm()">+ 添加</button></div>
+    <div class="subject-tabs" id="kSubjectTabs"></div>
     <div class="search-box"><input id="kSearch" placeholder="🔍 搜索知识点" oninput="renderKnowledgeList()"></div><div id="kList"></div>`;
+  renderSubjectTabs('kSubjectTabs', allSubjects, knowledgeSubjectFilter, (v)=>{ knowledgeSubjectFilter=v; renderKnowledgeList(); });
   renderKnowledgeList()
 }
 function renderKnowledgeList(){
   const list=D.knowledge[D.domain]||[];const q=(document.getElementById('kSearch')?.value||'').toLowerCase();
-  let f=list;if(q)f=f.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
+  let f=list;
+  if(knowledgeSubjectFilter!=='all') f = f.filter(k=>k.subject===knowledgeSubjectFilter);
+  if(q) f=f.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
   const c=document.getElementById('kList');if(!c)return;
   if(!f.length){c.innerHTML='<div class="card" style="color:var(--sub)">📚 暂无知识点</div>';return}
   c.innerHTML=f.map((k,i)=>{
@@ -539,8 +558,9 @@ function renderKnowledgeList(){
 }
 function openKnowledgeForm(editIdx){
   let k=null;if(editIdx!==undefined)k=D.knowledge[D.domain][editIdx];
+  const subjects = [...new Set([...PRESET_SUBJECTS, ...D.knowledge[D.domain].map(x=>x.subject)])];
   openModal(`<div class="modal-box"><h3>${k?'编辑':'添加'}知识点</h3>
-    <input id="kSubject" placeholder="科目" value="${k?esc(k.subject):''}">
+    <input id="kSubject" placeholder="科目" value="${k?esc(k.subject):''}" list="kSubjList"><datalist id="kSubjList">${subjects.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
     <input id="kChapter" placeholder="章节" value="${k?esc(k.chapter):''}">
     <textarea id="kContent" placeholder="内容" style="min-height:120px">${k?esc(k.content):''}</textarea>
     <div style="text-align:right;margin-top:12px"><button class="btn" onclick="closeModal()">取消</button> <button class="btn btn-primary" onclick="saveKnowledge(${editIdx!==undefined?editIdx:-1})">保存</button></div></div>`);
@@ -557,13 +577,19 @@ function editKnowledge(i){openKnowledgeForm(i)}
 function deleteKnowledge(i){D.knowledge[D.domain].splice(i,1);save();renderKnowledge()}
 function addKnowledgeToRecite(i){const k=D.knowledge[D.domain][i];if(!k)return;D.recites[D.domain].push({id:Date.now().toString(),subject:k.subject,chapter:k.chapter,content:k.content,stage:0,nextReview:todayStr()});save();toast('已加入背诵')}
 
-// ==================== 背诵 ====================
+// ==================== 背诵（科目筛选、三分区、增删） ====================
+let reciteSubjectFilter = 'all';
 function renderRecite(){
   const m=document.getElementById('reciteModule');const all=D.recites[D.domain]||[];
+  const allSubjects = [...new Set(all.map(k=>k.subject))];
   m.innerHTML=`<h3>💡 背诵管理 · ${domLabel()} <span class="badge">${all.length}</span></h3>
+    <div class="subject-tabs" id="reciteSubjectTabs"></div>
     <div class="flex" style="margin-bottom:8px"><input class="inline-input" id="reciteSearch" placeholder="🔍 搜索" oninput="renderRecite()" style="flex:1;min-width:200px"><input class="inline-input" id="reciteSubject" placeholder="科目"><input class="inline-input" id="reciteChapter" placeholder="章节"><input class="inline-input" id="reciteContent" placeholder="内容" style="flex:2"><button class="btn btn-primary btn-sm" onclick="addReciteItem()">+添加</button></div>`;
+  renderSubjectTabs('reciteSubjectTabs', allSubjects, reciteSubjectFilter, (v)=>{ reciteSubjectFilter=v; renderRecite(); });
   const q=(document.getElementById('reciteSearch')?.value||'').toLowerCase();
-  let filtered=all;if(q)filtered=filtered.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
+  let filtered=all;
+  if(reciteSubjectFilter!=='all') filtered=filtered.filter(k=>k.subject===reciteSubjectFilter);
+  if(q) filtered=filtered.filter(k=>k.subject.toLowerCase().includes(q)||k.chapter.toLowerCase().includes(q)||k.content.toLowerCase().includes(q));
   const due=filtered.filter(k=>k.nextReview&&k.nextReview<=todayStr()),fuzzy=filtered.filter(k=>k.stage>=1&&k.stage<5&&k.nextReview>todayStr()),mastered=filtered.filter(k=>k.stage>=5);
   const container=document.createElement('div');
   container.innerHTML=`
@@ -577,7 +603,18 @@ function addReciteItem(){const s=document.getElementById('reciteSubject')?.value
 function deleteReciteItem(i){D.recites[D.domain].splice(i,1);save();renderRecite()}
 function reciteFeedback(idx,type){const k=D.recites[D.domain][idx];if(!k)return;const intervals=[1,2,4,7,15,30,60,120];if(type==='good')k.stage=Math.min((k.stage||0)+1,intervals.length-1);else if(type==='fuzzy')k.stage=Math.max((k.stage||0)-1,0);else k.stage=0;k.nextReview=new Date(Date.now()+intervals[k.stage]*86400000).toISOString().split('T')[0];save();renderRecite()}
 
-// ==================== 英语单词（多选弹窗已加关闭） ====================
+// 通用科目标签渲染
+function renderSubjectTabs(containerId, subjects, currentFilter, callback){
+  const container = document.getElementById(containerId);if(!container)return;
+  const tabs = ['all', ...subjects.filter(s=>s)]; // all 表示全部
+  container.innerHTML = tabs.map(s=>{
+    const label = s==='all'?'全部':s;
+    const active = currentFilter===s;
+    return `<span class="subject-tab${active?' active':''}" onclick="event.stopPropagation();(${callback.toString()})('${s.replace(/'/g,"\\'")}')">${label}</span>`;
+  }).join('');
+}
+
+// ==================== 英语单词 ====================
 let wordView='all';
 function renderEnglish(){
   D.domain='english';const m=document.getElementById('englishModule');
